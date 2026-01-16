@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
+import { LogoMarkSvg } from "./logo";
+import Link from "next/link";
 
 export function Header() {
   const { setTheme, theme } = useTheme();
@@ -27,9 +29,10 @@ export function Header() {
     >
       <div className="container mx-auto flex h-16 items-center px-4">
         <div className="mr-4 hidden md:flex">
-          <a href="/" className="mr-6 flex items-center space-x-2">
-            <span className="text-lg font-bold tracking-tight">MD Móveis</span>
-          </a>
+          <Link href="/" className="mr-6 flex items-center space-x-2">
+            <LogoMarkSvg className="h-4 w-auto" />
+          </Link>
+          
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <a
               href="#"
