@@ -1,13 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Menu, Moon, Sun } from "lucide-react";
+import { motion } from "motion/react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import * as React from "react";
 import { LogoMarkSvg } from "./logo";
-import Link from "next/link";
 
-export function Header() {
+export function Header({ className }: { className?: string }) {
   const { setTheme, theme } = useTheme();
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -20,51 +22,39 @@ export function Header() {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+    <motion.header
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        duration: 1,
+      }}
+      animate={{
+        y: isScrolled ? 8 : 0,
+      }}
+      className={cn(
+        `flex items-center justify-center h-[72px] backdrop-blur-xl z-50 overflow-hidden w-full`,
         isScrolled
-          ? "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-border"
-          : "bg-transparent border-transparent"
-      }`}
+          ? "fixed top-0 left-1/2 -translate-x-1/2 w-[calc(100%-1rem)] bg-background/80 border rounded-md max-w-7xl"
+          : "relative mx-auto w-full",
+        className
+      )}
     >
-      <div className="container mx-auto flex h-16 items-center px-4">
+
+      {/* w-[calc(100%-1rem)] */}
+      <div className={cn("flex justify-between max-w-7xl", isScrolled ? "w-full" : "w-[calc(100%-1rem)]")}>
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <LogoMarkSvg className="h-4 w-auto" />
           </Link>
-          
-          <nav className="flex items-center space-x-6 text-sm font-medium">
-            <a
-              href="#"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Home
-            </a>
-            <a
-              href="#"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Sobre
-            </a>
-            <a
-              href="#"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Projetos
-            </a>
-            <a
-              href="#"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Contato
-            </a>
-          </nav>
         </div>
 
         {/* Mobile Logo via flex-1 to center or left align if needed, but here sticking to simple right alignment for toggle */}
         <div className="flex flex-1 items-center justify-between md:justify-end">
           <div className="md:hidden">
-            <span className="font-bold">MD Móveis</span>
+            <Link href="/" className="mr-6 flex items-center space-x-2">
+              <LogoMarkSvg className="h-4 w-auto" />
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
@@ -86,6 +76,6 @@ export function Header() {
           </div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

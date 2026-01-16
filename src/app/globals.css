@@ -123,5 +123,22 @@
     @apply bg-background text-foreground;
   }
 
-  
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-marquee {
+    animation: marquee 60s linear infinite;
+  }
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  section.layout {
+    @apply w-[calc(100%-1.5rem)] sm:w-[calc(100%-4rem)] max-w-7xl mx-auto;
+  }
 }
