@@ -2,7 +2,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["var(--font-geist-sans)"],
+        italiana: ["var(--font-italiana)"],
+        mono: ["var(--font-geist-mono)"],
       },
     },
   },
