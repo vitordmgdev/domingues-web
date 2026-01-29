@@ -39,7 +39,7 @@ export const AuthDialog = ({ children }: { children: React.ReactNode }) => {
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px]" defaultValue="sign-in">
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Autenticação</DialogTitle>
                     <DialogDescription>
@@ -47,7 +47,7 @@ export const AuthDialog = ({ children }: { children: React.ReactNode }) => {
                     </DialogDescription>
                 </DialogHeader>
 
-                <Tabs defaultValue="sign-up">
+                <Tabs defaultValue="sign-in">
                     <TabsList className="w-full bg-background p-0">
                         <TabsTrigger value="sign-in">Entrar</TabsTrigger>
 
