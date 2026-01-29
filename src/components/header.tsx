@@ -28,7 +28,7 @@ export function Header({ className }: { className?: string }) {
         >
             <div
                 className={cn(
-                    "flex justify-between w-[calc(100%-4rem)] max-w-5xl bg-popover backdrop-blur-md h-14 rounded-sm border overflow-hidden",
+                    "flex justify-between w-[calc(100%-4rem)] max-w-5xl bg-background backdrop-blur-md h-14 rounded-sm border overflow-hidden",
                 )}
             >
                 <div className={`hidden md:flex items-center gap-4 ml-4`}>

@@ -209,6 +209,20 @@ export default function LandingPage() {
                     </div>
                 </div>
             </section>
+
+            <div className="w-full max-w-5xl bg-background rounded-sm border left-1/2 -translate-x-1/2 -translate-y-1/2 absolute z-2 flex items-center justify-between p-4">
+                <h1 className="text-left text-white text-xl font-normal max-w-[320px] font-geist">
+                    + de 17 anos de experiência no ramo moveleiro
+                </h1>
+
+                <h1 className="text-center text-white text-xl font-normal max-w-[320px] font-geist">
+                    Grande variedade de opções
+                </h1>
+
+                <h1 className="text-right text-white text-xl font-normal max-w-[320px] font-geist">
+                    Materiais de qualidade e acabamentos impecáveis
+                </h1>
+            </div>
         </>
     );
 }
