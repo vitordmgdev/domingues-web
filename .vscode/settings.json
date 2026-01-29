@@ -2,5 +2,5 @@
     "tailwindCSS.experimental.configFile": "src/app/globals.css",
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
-    "prisma.pinToPrisma6": true
+    "prisma.pinToPrisma6": false
 }
