@@ -6,7 +6,7 @@ import { Calendar, Hammer, PencilRuler, SwatchBook, Truck } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
-import { ScrollBackToTop } from "./components/scrollBackToTop";
+import { ScrollBackToTop } from "./components/scroll-back-to-top";
 
 export interface Testimonial {
     id: number;
@@ -162,7 +162,11 @@ export default function LandingPage() {
                 <div className="flex flex-col-reverse items-start justify-center lg:flex-row lg:items-center lg:justify-between absolute inset-0 mx-auto w-[calc(100%-4rem)] max-w-5xl z-2">
                     <div className="max-w-lg">
                         <div className="flex flex-col gap-8">
-                            <Badge>Móveis Planejados e Modulares</Badge>
+                            <div className="flex gap-2">
+                                <Badge>
+                                    São Francisco do Sul, Santa Catarina
+                                </Badge>
+                            </div>
 
                             <h1 className="text-[clamp(2rem,5vw,2.5rem)] leading-[1.1] font-medium font-geist text-justify text-white">
                                 Móveis planejados e modulares para quem valoriza

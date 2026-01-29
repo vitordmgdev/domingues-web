@@ -66,13 +66,11 @@ model Account {
 }
 
 model Verification {
-  id         String   @id
+  id        String   @id @default(cuid())
   identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  value     String
+  expiresAt DateTime
 
-  @@index([identifier])
-  @@map("verification")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

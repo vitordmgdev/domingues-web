@@ -5,7 +5,7 @@ import { admin } from "better-auth/plugins";
 import prisma from "./prisma";
 
 export const auth = betterAuth({
-    baseURL: process.env.BETTER_AUTH_URL,
+    baseURL: "http://localhost:3000",
     database: prismaAdapter(prisma, {
         provider: "postgresql",
         debugLogs: true,
@@ -18,10 +18,11 @@ export const auth = betterAuth({
     ],
     socialProviders: {
         google: {
+            enabled: true,
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
             accessType: "offline",
             prompt: "select_account consent",
-        }
+        },
     },
 });
