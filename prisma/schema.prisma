@@ -16,11 +16,14 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  party         Party?
 
   role       String?
   banned     Boolean?  @default(false)
   banReason  String?
   banExpires DateTime?
+
+  onboardedAt DateTime?
 
   @@unique([email])
   @@map("user")
@@ -78,12 +81,15 @@ model Verification {
 
 model Party {
   id        String  @id @default(cuid())
+  userId    String @unique
   firstName String
   lastName  String?
   fullName  String
   email     String?
   cpf       String? @unique
   cnpj      String? @unique
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   partyType    PartyType[]
   partyPhone   PartyPhone[]

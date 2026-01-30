@@ -15,6 +15,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "usehooks-ts";
+import z from "zod";
 
 export const AddClient = ({ children }: { children: React.ReactNode }) => {
     const isMobile = useMediaQuery("(max-width: 768px)");
@@ -45,3 +46,10 @@ export const AddClient = ({ children }: { children: React.ReactNode }) => {
         </Dialog>
     );
 };
+
+export const registerClientSchema = z.object({
+    name: z.string()
+    .min(3, "Nome deve ter pelo menos 3 caracteres")
+    .max(120, "Nome deve ter menos de 120 caracteres"),
+    
+})
