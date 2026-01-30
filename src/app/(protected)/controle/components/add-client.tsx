@@ -42,26 +42,40 @@ import { useForm } from "react-hook-form";
 import { useMediaQuery } from "usehooks-ts";
 import z from "zod";
 
-export const AddClient = ({ children }: { children: React.ReactNode }) => {
+export const AddClient = ({
+    children,
+    open,
+    onOpenChange,
+}: {
+    children?: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+}) => {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     if (isMobile) {
         return (
-            <Drawer>
-                <DrawerTrigger asChild>{children}</DrawerTrigger>
+            <Drawer open={open} onOpenChange={onOpenChange}>
+                {children && <DrawerTrigger asChild>{children}</DrawerTrigger>}
 
                 <DrawerContent>
                     <DrawerHeader>
                         <DrawerTitle>Adicionar cliente</DrawerTitle>
+
+                        <DialogDescription>
+                            Informe os dados do cliente
+                        </DialogDescription>
                     </DrawerHeader>
+
+                    <RegisterClientForm />
                 </DrawerContent>
             </Drawer>
         );
     }
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>{children}</DialogTrigger>
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            {children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
             <DialogContent>
                 <DialogHeader>
@@ -131,16 +145,21 @@ export const RegisterClientForm = () => {
 
     return (
         <Form {...form}>
-            <form className="flex flex-col gap-4">
+            <form className="flex flex-col gap-4 mx-4 md:mx-0">
                 <div className="flex flex-col gap-2">
-                    <FormLabel>Nome completo</FormLabel>
+                    <FormLabel className="max-[425px]:hidden">
+                        Nome completo
+                    </FormLabel>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 min-[425px]:grid-cols-2 gap-4">
                         <FormField
                             control={form.control}
                             name="firstName"
                             render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel className="min-[425px]:hidden">
+                                        Nome
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="Nome"
@@ -159,6 +178,9 @@ export const RegisterClientForm = () => {
                             name="lastName"
                             render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel className="min-[425px]:hidden">
+                                        Sobrenome
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="Sobrenome"
@@ -174,7 +196,7 @@ export const RegisterClientForm = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
                     <FormField
                         control={form.control}
                         name="email"
@@ -208,7 +230,7 @@ export const RegisterClientForm = () => {
                                 <FormControl>
                                     <Input
                                         placeholder="000.000.000-00"
-                                        className="w-32"
+                                        className="w-full md:w-32"
                                         autoComplete="off"
                                         value={field.value}
                                         onChange={(e) => {
