@@ -1,8 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -14,6 +16,29 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { MaskitoOptions } from "@maskito/core";
+import { useMaskito } from "@maskito/react";
+import { PartyStatus } from "@prisma/client";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { Mail } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { useMediaQuery } from "usehooks-ts";
 import z from "zod";
 
@@ -41,15 +66,221 @@ export const AddClient = ({ children }: { children: React.ReactNode }) => {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Adicionar cliente</DialogTitle>
+
+                    <DialogDescription>
+                        Informe os dados do cliente
+                    </DialogDescription>
                 </DialogHeader>
+
+                <RegisterClientForm />
             </DialogContent>
         </Dialog>
     );
 };
 
 export const registerClientSchema = z.object({
-    name: z.string()
-    .min(3, "Nome deve ter pelo menos 3 caracteres")
-    .max(120, "Nome deve ter menos de 120 caracteres"),
-    
-})
+    firstName: z
+        .string()
+        .min(3, "Nome deve ter pelo menos 3 caracteres")
+        .max(32, "Nome deve ter menos de 32 caracteres"),
+    lastName: z
+        .string()
+        .min(3, "Sobrenome deve ter pelo menos 3 caracteres")
+        .max(64, "Sobrenome deve ter menos de 64 caracteres"),
+    email: z.email().optional(),
+    cpf: z.string().optional(),
+    status: z.enum(Object.values(PartyStatus)),
+    description: z.string().optional(),
+});
+
+export type RegisterClientSchema = z.infer<typeof registerClientSchema>;
+
+export const RegisterClientForm = () => {
+    const form = useForm<z.infer<typeof registerClientSchema>>({
+        resolver: zodResolver(registerClientSchema),
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            cpf: "",
+            status: "NOVO",
+            description: "",
+        },
+    });
+
+    const cpfMask: MaskitoOptions = {
+        mask: [
+            /\d/,
+            /\d/,
+            /\d/,
+            ".",
+            /\d/,
+            /\d/,
+            /\d/,
+            ".",
+            /\d/,
+            /\d/,
+            /\d/,
+            "-",
+            /\d/,
+            /\d/,
+        ],
+    };
+
+    const cpfInputRef = useMaskito({ options: cpfMask });
+
+    return (
+        <Form {...form}>
+            <form className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                    <FormLabel>Nome completo</FormLabel>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormField
+                            control={form.control}
+                            name="firstName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Nome"
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                            }}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="lastName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Sobrenome"
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                            }}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>E-mail</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="example@email.com"
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                            }}
+                                            className="pe-8.5"
+                                        />
+
+                                        <Mail className="absolute right-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="cpf"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>CPF</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="000.000.000-00"
+                                        className="w-32"
+                                        autoComplete="off"
+                                        value={field.value}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                        }}
+                                        ref={cpfInputRef}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Status</FormLabel>
+                            <FormControl>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Selecione um status" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {Object.values(PartyStatus).map(
+                                            (status) => (
+                                                <SelectItem
+                                                    key={status}
+                                                    value={status}
+                                                >
+                                                    {status}
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Descrição</FormLabel>
+
+                            <FormControl>
+                                <Textarea
+                                    placeholder="Digite uma descrição"
+                                    className="h-30 resize-none"
+                                    {...field}
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+
+                <div className="flex justify-end gap-4">
+                    <Button type="submit">Registrar cliente</Button>
+
+                    <DialogClose asChild>
+                        <Button variant="outline">Cancelar</Button>
+                    </DialogClose>
+                </div>
+            </form>
+        </Form>
+    );
+};

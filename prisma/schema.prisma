@@ -88,6 +88,7 @@ model Party {
   email     String?
   cpf       String? @unique
   cnpj      String? @unique
+  description String?
 
   user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
