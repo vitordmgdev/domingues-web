@@ -1,8 +1,8 @@
 "use client";
 
-import { Nav } from "@/app/(protected)/controle/components/layout/nav";
-import { NavSecondary } from "@/app/(protected)/controle/components/layout/nav-secondary";
-import { NavUser } from "@/app/(protected)/controle/components/layout/nav-user";
+import { Nav } from "@/app/(protected)/control/components/layout/nav";
+import { NavSecondary } from "@/app/(protected)/control/components/layout/nav-secondary";
+import { NavUser } from "@/app/(protected)/control/components/layout/nav-user";
 import {
     Sidebar,
     SidebarContent,
@@ -34,19 +34,19 @@ export function AppSidebar({
         navPlataforma: [
             {
                 title: "Dashboard",
-                url: "/controle",
+                url: "/control",
                 icon: LayoutDashboardIcon,
             },
         ],
         navCrm: [
             {
                 title: "Leads",
-                url: "/controle/leads",
+                url: "/control/leads",
                 icon: ZapIcon,
             },
             {
                 title: "Clientes",
-                url: "/controle/clients",
+                url: "/control/clients",
                 icon: UsersIcon,
                 isActive: true,
                 action: {
@@ -57,17 +57,17 @@ export function AppSidebar({
             },
             {
                 title: "Pipeline",
-                url: "/controle/pipeline",
+                url: "/control/pipeline",
                 icon: SquareKanbanIcon,
             },
             {
                 title: "Agenda",
-                url: "/controle/schedule",
+                url: "/control/schedule",
                 icon: CalendarDaysIcon,
             },
             {
                 title: "Atividades",
-                url: "/controle/activities",
+                url: "/control/activities",
                 icon: ActivityIcon,
             },
         ],

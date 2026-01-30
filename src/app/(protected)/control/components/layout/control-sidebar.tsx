@@ -1,11 +1,11 @@
 "use client";
 
-import { AppSidebar } from "@/app/(protected)/controle/components/layout/app-sidebar";
+import { AppSidebar } from "@/app/(protected)/control/components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useState } from "react";
+import { useSidebarStore } from "../../store/control-store";
 import { AddClient } from "../add-client";
 import { Header } from "./header";
-import { useSidebarStore } from "../../store/control-store";
 
 export const ControlSidebar = ({ children }: { children: React.ReactNode }) => {
     const [clientFormIsOpen, setClientFormIsOpen] = useState(false);
