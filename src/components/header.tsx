@@ -22,33 +22,22 @@ export function Header({ className }: { className?: string }) {
     return (
         <motion.header
             className={cn(
-                `flex items-center justify-center h-20 z-50 overflow-hidden w-full absolute`,
+                `flex items-end justify-center z-100 overflow-hidden w-full h-16 absolute`,
                 className,
             )}
         >
             <div
                 className={cn(
-                    "flex justify-between w-[calc(100%-4rem)] max-w-5xl bg-background backdrop-blur-md h-14 rounded-sm border overflow-hidden",
+                    "flex justify-between items-center pl-4 w-[calc(100%-4rem)] max-w-7xl bg-background h-full rounded-b-sm border-x border-b overflow-hidden",
                 )}
             >
-                <div className={`hidden md:flex items-center gap-4 ml-4`}>
+                <div className={`hidden md:flex items-center gap-4`}>
                     <Link href="/" className="flex items-center">
                         <LogoMarkSvg className="h-3 w-auto" />
                     </Link>
                 </div>
 
-                <div className="flex items-center justify-between">
-                    <div className="md:hidden">
-                        <Link
-                            href="/"
-                            className="mr-6 flex items-center space-x-2"
-                        >
-                            <LogoMarkSvg className="h-4 w-auto" />
-                        </Link>
-                    </div>
-
-                    <HeaderSession />
-                </div>
+                <HeaderSession />
             </div>
         </motion.header>
     );

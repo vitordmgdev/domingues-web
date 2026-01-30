@@ -153,14 +153,14 @@ export default function LandingPage() {
                 id="home"
                 className={`w-full relative overflow-hidden h-screen min-h-[500px] lg:h-[calc(100vh-4rem)]`}
             >
-                <div className="relative h-full overflow-hidden lg:rounded-b-[2rem]">
+                <div className="relative h-full overflow-hidden lg:rounded-b-xl">
                     <div className="absolute inset-0 bg-black/60 z-1" />
 
                     <div className="object-cover select-none bg-fixed bg-[url('https://i.imgur.com/DT5SwbG.jpeg')] bg-center bg-cover w-full h-full" />
                 </div>
 
-                <div className="flex flex-col-reverse items-start justify-center lg:flex-row lg:items-center lg:justify-between absolute inset-0 mx-auto w-[calc(100%-4rem)] max-w-5xl z-2">
-                    <div className="max-w-lg">
+                <div className="flex flex-col-reverse items-start justify-center lg:flex-row lg:items-center lg:justify-between absolute inset-0 mx-auto w-[calc(100%-4rem)] max-w-7xl z-2">
+                    <div className="max-w-xl">
                         <div className="flex flex-col gap-8">
                             <div className="flex gap-2">
                                 <Badge>
@@ -209,20 +209,6 @@ export default function LandingPage() {
                     </div>
                 </div>
             </section>
-
-            <div className="w-full max-w-5xl bg-background rounded-sm border left-1/2 -translate-x-1/2 -translate-y-1/2 absolute z-2 flex items-center justify-between p-4">
-                <h1 className="text-left text-white text-xl font-normal max-w-[320px] font-geist">
-                    + de 17 anos de experiência no ramo moveleiro
-                </h1>
-
-                <h1 className="text-center text-white text-xl font-normal max-w-[320px] font-geist">
-                    Grande variedade de opções
-                </h1>
-
-                <h1 className="text-right text-white text-xl font-normal max-w-[320px] font-geist">
-                    Materiais de qualidade e acabamentos impecáveis
-                </h1>
-            </div>
         </>
     );
 }

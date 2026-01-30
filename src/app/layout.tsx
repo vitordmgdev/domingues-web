@@ -20,7 +20,10 @@ const domine = Domine({
 });
 
 export const metadata: Metadata = {
-    title: "Marcenaria em São Francisco do Sul | MD Móveis Sob Medida",
+    title: {
+        template: "%s | MD Móveis",
+        default: "MD Móveis"
+    },
     description:
         "Marcenaria com + de 17 anos de experiência atendendo com planejamento, design & história.",
     keywords: [

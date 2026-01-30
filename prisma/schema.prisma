@@ -74,3 +74,4 @@ model Verification {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+

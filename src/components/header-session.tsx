@@ -24,7 +24,7 @@ export const HeaderSession = () => {
     if (session) {
         return (
             <Popover>
-                <PopoverTrigger className="flex items-center justify-between gap-4 h-full w-40 px-4 border-l cursor-pointer hover:bg-background/25">
+                <PopoverTrigger className="flex items-center justify-between gap-4 h-full w-48 border-l cursor-pointer hover:bg-accent/20 px-6">
                     <span className="text-sm font-normal font-geist truncate">
                         {session.user.name}
                     </span>
@@ -41,7 +41,7 @@ export const HeaderSession = () => {
                 </PopoverTrigger>
 
                 <PopoverContent
-                    className="max-w-48 p-1"
+                    className="max-w-56 p-1"
                     align="end"
                     side="top"
                     sideOffset={8}
@@ -69,7 +69,7 @@ export const HeaderSession = () => {
 
     return (
         <AuthDialog>
-            <Button variant="ghost" className="mr-2">
+            <Button variant="ghost" className="mr-4">
                 Entrar ou cadastrar
             </Button>
         </AuthDialog>

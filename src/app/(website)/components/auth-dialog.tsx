@@ -97,7 +97,7 @@ export const SignInForm = () => {
             email: values.email,
             password: values.password,
             rememberMe: values.rememberMe,
-            callbackURL: "/",
+            callbackURL: "/",   
         });
     }
 
@@ -172,11 +172,7 @@ export const SignInForm = () => {
                     />
                 </div>
 
-                <Button
-                    type="submit"
-                    className="w-full"
-                    variant="brand"
-                >
+                <Button type="submit" className="w-full" variant="brand">
                     Entrar na conta
                 </Button>
 
@@ -269,11 +265,7 @@ export const SignUpForm = () => {
                     />
                 </div>
 
-                <Button
-                    type="submit"
-                    className="w-full"
-                    variant="brand"
-                >
+                <Button type="submit" className="w-full" variant="brand">
                     Criar conta
                 </Button>
             </form>
