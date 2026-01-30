@@ -2,11 +2,11 @@
 
 import {
     ActivityIcon,
+    Boxes,
     CalendarDaysIcon,
     Contrast,
     LayoutDashboardIcon,
     PlusIcon,
-    Settings,
     SquareKanbanIcon,
     UsersIcon,
     ZapIcon,
@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/utils/auth-client";
-import { AddClient } from "../add-customer";
+import { AddClient } from "../add-client";
 
 const data = {
     navPlataforma: [
@@ -32,9 +32,14 @@ const data = {
             title: "Dashboard",
             url: "/controle",
             icon: LayoutDashboardIcon,
-        },
+        }
     ],
     navCrm: [
+        {
+            title: "Leads",
+            url: "/controle/leads",
+            icon: ZapIcon,
+        },
         {
             title: "Clientes",
             url: "/controle/clients",
@@ -55,32 +60,22 @@ const data = {
             },
         },
         {
-            title: "Leads",
-            url: "/controle/leads",
-            icon: ZapIcon,
-        },
-        {
             title: "Pipeline",
             url: "/controle/pipeline",
             icon: SquareKanbanIcon,
         },
         {
             title: "Agenda",
-            url: "/controle/agenda",
+            url: "/controle/schedule",
             icon: CalendarDaysIcon,
         },
         {
             title: "Atividades",
-            url: "/controle/atividades",
+            url: "/controle/activities",
             icon: ActivityIcon,
         },
     ],
     navSecondary: [
-        {
-            title: "Configurações",
-            url: "#",
-            icon: Settings,
-        },
         {
             title: "Alterar Tema",
             url: "#",

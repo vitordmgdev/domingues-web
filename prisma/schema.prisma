@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -66,12 +65,105 @@ model Account {
 }
 
 model Verification {
-  id        String   @id @default(cuid())
+  id         String   @id @default(cuid())
   identifier String
-  value     String
-  expiresAt DateTime
+  value      String
+  expiresAt  DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("verification")
 }
 
+model Party {
+  id        String  @id @default(cuid())
+  firstName String
+  lastName  String?
+  fullName  String
+  email     String?
+  cpf       String? @unique
+  cnpj      String? @unique
+
+  partyType    PartyType[]
+  partyPhone   PartyPhone[]
+  partyAddress PartyAddress[]
+
+  status     PartyStatus @default(ATIVO)
+  archivedAt DateTime?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@map("party")
+}
+
+model PartyType {
+  id        String        @id @default(cuid())
+  partyId   String
+  type      PartyEntities
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  party Party @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  @@unique([partyId, type])
+  @@index([partyId])
+
+  @@map("party_type")
+}
+
+model PartyPhone {
+  id         String   @id @default(cuid())
+  partyId    String
+  phone      String
+  isPrimary  Boolean  @default(false)
+  isWhatsapp Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  party Party @relation(fields: [partyId], references: [id])
+
+  @@unique([partyId, phone])
+  @@index([partyId])
+
+  @@map("party_phone")
+}
+
+model PartyAddress {
+  id      String @id @default(cuid())
+  partyId String
+
+  name       String
+  identifier String?
+  number     String
+  complement String?
+  district   String
+  city       String
+  state      String
+  zipCode    String
+  isPrimary  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  party Party @relation(fields: [partyId], references: [id])
+
+  @@index([partyId])
+  @@map("party_address")
+}
+
+enum PartyStatus {
+  ATIVO
+  INATIVO
+  INTERESSE
+  PERDA
+  NEGOCIACAO
+  CONTATO
+  NOVO
+}
+
+enum PartyEntities {
+  CONSUMIDOR
+  FUNCIONARIO
+  PARCEIRO
+  FORNECEDOR
+}
