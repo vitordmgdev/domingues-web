@@ -21,11 +21,11 @@ export async function createClientAction(data: RegisterClientType) {
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === "P2002") {
-                throw new Error("CPF ou CNPJ já cadastrado");
+                throw new Error("Já existe um cliente com este CPF.");
             }
         }
 
-        throw new Error("Erro ao criar cliente");
+        throw new Error("Erro ao criar cliente.");
     }
 }
 
