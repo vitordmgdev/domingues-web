@@ -1,11 +1,17 @@
-"use server";
+"use client";
 
-import prisma from "@/lib/prisma";
+import { useQuery } from "@tanstack/react-query";
+import { listClientsAction } from "../actions/client-actions";
 
-const ClientsPage = async () => {
-    const clients = await prisma.party.findMany();
+const ClientsPage = () => {
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["clients"],
+        queryFn: async () => {
+            return await listClientsAction();
+        },
+    });
 
-    return <div>{JSON.stringify(clients)}</div>;
+    return <pre>{JSON.stringify(data, null, 2)}</pre>;
 };
 
 export default ClientsPage;

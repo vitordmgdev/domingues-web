@@ -32,13 +32,13 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { cpfMask } from "@/utils/masks";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { MaskitoOptions } from "@maskito/core";
 import { useMaskito } from "@maskito/react";
 import { PartyStatus } from "@prisma/client";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Mail } from "lucide-react";
-import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMediaQuery } from "usehooks-ts";
@@ -111,41 +111,33 @@ export const RegisterClientForm = () => {
         },
     });
 
-    const cpfMask: MaskitoOptions = {
-        mask: [
-            /\d/,
-            /\d/,
-            /\d/,
-            ".",
-            /\d/,
-            /\d/,
-            /\d/,
-            ".",
-            /\d/,
-            /\d/,
-            /\d/,
-            "-",
-            /\d/,
-            /\d/,
-        ],
-    };
-
     const cpfInputRef = useMaskito({ options: cpfMask });
 
-    const [isPending, startTransition] = useTransition();
+    const queryClient = useQueryClient();
+
+    const {
+        mutateAsync: mutateCreateClient,
+        isPending: isPendingCreateClient,
+    } = useMutation({
+        mutationFn: async (data: RegisterClientType) => {
+            return await createClientAction(data);
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["clients"] });
+
+            form.reset();
+
+            toast.success("Cliente registrado com sucesso!", {
+                description: `O cliente ${data.firstName} ${data.lastName} foi registrado com sucesso!`,
+            });
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    });
 
     async function createClient(data: RegisterClientType) {
-        startTransition(async () => {
-            await createClientAction(data)
-                .then((data) => {
-                    toast.success("Cliente registrado com sucesso!", {
-                        description: `O cliente ${data.firstName} ${data.lastName} foi registrado com sucesso!`,
-                    });
-                })
-                .catch((error) => {
-                    toast.error(error.message);
-                });
-        });
+        await mutateCreateClient(data);
     }
 
     return (
@@ -304,12 +296,14 @@ export const RegisterClientForm = () => {
                 />
 
                 <div className="flex justify-end gap-4">
-                    <Button type="submit" disabled={isPending}>
-                        {isPending && (
+                    <Button type="submit" disabled={isPendingCreateClient}>
+                        {isPendingCreateClient && (
                             <Loader2 className="size-4 animate-spin" />
                         )}
 
-                        {isPending ? "Registrando..." : "Registrar cliente"}
+                        {isPendingCreateClient
+                            ? "Registrando..."
+                            : "Registrar cliente"}
                     </Button>
 
                     <DialogClose asChild>
