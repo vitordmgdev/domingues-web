@@ -1,7 +1,7 @@
-import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Domine, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -22,7 +22,7 @@ const domine = Domine({
 export const metadata: Metadata = {
     title: {
         template: "%s | MD Móveis",
-        default: "MD Móveis"
+        default: "MD Móveis",
     },
     description:
         "Marcenaria com + de 17 anos de experiência atendendo com planejamento, design & história.",
@@ -54,14 +54,7 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} ${domine.variable} antialiased`}
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    disableTransitionOnChange
-                    enableSystem
-                >
-                    {children}
-                </ThemeProvider>
+                <Providers>{children}</Providers>
             </body>
         </html>
     );
