@@ -37,10 +37,16 @@ import type { MaskitoOptions } from "@maskito/core";
 import { useMaskito } from "@maskito/react";
 import { PartyStatus } from "@prisma/client";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { Mail } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useMediaQuery } from "usehooks-ts";
-import z from "zod";
+import { createClientAction } from "../actions/client-actions";
+import {
+    registerClientSchema,
+    RegisterClientType,
+} from "../actions/client-schemas";
 
 export const AddClient = ({
     children,
@@ -92,25 +98,8 @@ export const AddClient = ({
     );
 };
 
-export const registerClientSchema = z.object({
-    firstName: z
-        .string()
-        .min(3, "Nome deve ter pelo menos 3 caracteres")
-        .max(32, "Nome deve ter menos de 32 caracteres"),
-    lastName: z
-        .string()
-        .min(3, "Sobrenome deve ter pelo menos 3 caracteres")
-        .max(64, "Sobrenome deve ter menos de 64 caracteres"),
-    email: z.email().optional(),
-    cpf: z.string().optional(),
-    status: z.enum(Object.values(PartyStatus)),
-    description: z.string().optional(),
-});
-
-export type RegisterClientSchema = z.infer<typeof registerClientSchema>;
-
 export const RegisterClientForm = () => {
-    const form = useForm<z.infer<typeof registerClientSchema>>({
+    const form = useForm<RegisterClientType>({
         resolver: zodResolver(registerClientSchema),
         defaultValues: {
             firstName: "",
@@ -143,9 +132,28 @@ export const RegisterClientForm = () => {
 
     const cpfInputRef = useMaskito({ options: cpfMask });
 
+    const [isPending, startTransition] = useTransition();
+
+    async function createClient(data: RegisterClientType) {
+        startTransition(async () => {
+            await createClientAction(data)
+                .then((data) => {
+                    toast.success("Cliente registrado com sucesso!", {
+                        description: `O cliente ${data.firstName} ${data.lastName} foi registrado com sucesso!`,
+                    });
+                })
+                .catch((error) => {
+                    toast.error(error.message);
+                });
+        });
+    }
+
     return (
         <Form {...form}>
-            <form className="flex flex-col gap-4 mx-4 md:mx-0">
+            <form
+                className="flex flex-col gap-4 mx-4 md:mx-0"
+                onSubmit={form.handleSubmit(createClient)}
+            >
                 <div className="flex flex-col gap-2">
                     <FormLabel className="max-[425px]:hidden">
                         Nome completo
@@ -296,7 +304,13 @@ export const RegisterClientForm = () => {
                 />
 
                 <div className="flex justify-end gap-4">
-                    <Button type="submit">Registrar cliente</Button>
+                    <Button type="submit" disabled={isPending}>
+                        {isPending && (
+                            <Loader2 className="size-4 animate-spin" />
+                        )}
+
+                        {isPending ? "Registrando..." : "Registrar cliente"}
+                    </Button>
 
                     <DialogClose asChild>
                         <Button variant="outline">Cancelar</Button>

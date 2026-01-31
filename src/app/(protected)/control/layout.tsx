@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { ControlSidebar } from "./components/layout/control-sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 const ControlLayout = async ({ children }: { children: React.ReactNode }) => {
     const session = await auth.api.getSession({
@@ -14,7 +15,12 @@ const ControlLayout = async ({ children }: { children: React.ReactNode }) => {
         return redirect("/");
     }
 
-    return <ControlSidebar>{children}</ControlSidebar>;
+    return (
+        <ControlSidebar>
+            <Toaster />
+            {children}
+        </ControlSidebar>
+    );
 };
 
 export default ControlLayout;

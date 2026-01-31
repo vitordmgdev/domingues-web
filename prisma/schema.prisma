@@ -68,7 +68,7 @@ model Account {
 }
 
 model Verification {
-  id         String   @id @default(cuid())
+  id         String   @id @default(ulid())
   identifier String
   value      String
   expiresAt  DateTime
@@ -80,11 +80,11 @@ model Verification {
 }
 
 model Party {
-  id        String  @id @default(cuid())
-  userId    String @unique
+  id        String  @id @default(ulid())
+  userId    String? @unique
   firstName String
   lastName  String?
-  fullName  String
+  fullName  String  
   email     String?
   cpf       String? @unique
   cnpj      String? @unique
@@ -120,7 +120,7 @@ model PartyType {
 }
 
 model PartyPhone {
-  id         String   @id @default(cuid())
+  id         String   @id @default(ulid())
   partyId    String
   phone      String
   isPrimary  Boolean  @default(false)
@@ -137,7 +137,7 @@ model PartyPhone {
 }
 
 model PartyAddress {
-  id      String @id @default(cuid())
+  id      String @id @default(ulid())
   partyId String
 
   name       String

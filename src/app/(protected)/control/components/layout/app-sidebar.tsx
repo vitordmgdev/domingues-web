@@ -12,12 +12,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/utils/auth-client";
 import {
     ActivityIcon,
+    Bot,
     CalendarDaysIcon,
     Contrast,
     LayoutDashboardIcon,
     PlusIcon,
     SquareKanbanIcon,
     UsersIcon,
+    UsersRound,
     ZapIcon,
 } from "lucide-react";
 
@@ -37,6 +39,16 @@ export function AppSidebar({
                 url: "/control",
                 icon: LayoutDashboardIcon,
             },
+            {
+                title: "Times",
+                url: "/control/teams",
+                icon: UsersRound,
+            },
+            {
+                title: "Chat IA",
+                url: "/control/ia",
+                icon: Bot,
+            }
         ],
         navCrm: [
             {
@@ -48,7 +60,6 @@ export function AppSidebar({
                 title: "Clientes",
                 url: "/control/clients",
                 icon: UsersIcon,
-                isActive: true,
                 action: {
                     title: "Adicionar cliente",
                     icon: PlusIcon,
@@ -83,7 +94,7 @@ export function AppSidebar({
     const { data: session, isPending } = authClient.useSession();
 
     return (
-        <Sidebar variant="floating" {...props}>
+        <Sidebar variant="floating" collapsible="icon" {...props}>
             <SidebarContent>
                 <Nav label="Plataforma" items={data.navPlataforma} />
 
