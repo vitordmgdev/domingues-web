@@ -3,7 +3,6 @@
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon, SearchIcon } from "lucide-react";
 import { listClientsAction } from "../actions/client-actions";
@@ -18,18 +17,17 @@ const ClientsPage = () => {
         },
     });
 
-    if (isLoading) {
-        return <Skeleton className="h-20" />;
-    }
-
     return (
         <>
-            <h1 className="text-lg font-sans">Clientes cadastrados</h1>
+            <h1 className="text-lg font-sans">
+                Clientes cadastrados {data?.count}{" "}
+            </h1>
 
             <div className="w-full flex flex-col gap-4">
                 <header className="flex items-center justify-between gap-4">
                     <div className="relative">
                         <Input
+                            disabled={isLoading}
                             placeholder="Pesquisar cliente"
                             className="w-64"
                         />
@@ -38,14 +36,18 @@ const ClientsPage = () => {
                     </div>
 
                     <AddClient>
-                        <Button>
+                        <Button disabled={isLoading}>
                             <PlusIcon />
                             Adicionar cliente
                         </Button>
                     </AddClient>
                 </header>
 
-                <DataTable columns={clientsColumns} data={data || []} />
+                <DataTable
+                    columns={clientsColumns}
+                    data={data?.clients || []}
+                    isLoading={isLoading}
+                />
             </div>
         </>
     );

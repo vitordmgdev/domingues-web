@@ -22,6 +22,7 @@ import {
     FormField,
     FormItem,
     FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -169,6 +170,8 @@ export const RegisterClientForm = () => {
                                             }}
                                         />
                                     </FormControl>
+
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -190,6 +193,8 @@ export const RegisterClientForm = () => {
                                             }}
                                         />
                                     </FormControl>
+
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -217,6 +222,8 @@ export const RegisterClientForm = () => {
                                         <Mail className="absolute right-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                     </div>
                                 </FormControl>
+
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -239,6 +246,8 @@ export const RegisterClientForm = () => {
                                         ref={cpfInputRef}
                                     />
                                 </FormControl>
+
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -291,6 +300,8 @@ export const RegisterClientForm = () => {
                                     {...field}
                                 />
                             </FormControl>
+
+                            <FormMessage />
                         </FormItem>
                     )}
                 />

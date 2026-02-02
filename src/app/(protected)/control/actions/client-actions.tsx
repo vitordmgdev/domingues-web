@@ -16,6 +16,11 @@ export async function createClientAction(data: RegisterClientType) {
             data: {
                 ...parsedData.data,
                 fullName: `${parsedData.data.firstName} ${parsedData.data.lastName}`,
+                partyType: {
+                    create: {
+                        type: "CONSUMIDOR",
+                    },
+                },
             },
         });
     } catch (error) {
@@ -30,14 +35,31 @@ export async function createClientAction(data: RegisterClientType) {
 }
 
 export async function listClientsAction() {
-    return await prisma.party.findMany({
+    const count = await prisma.party.count({
+        where: {
+            partyType: {
+                some: {
+                    type: "CONSUMIDOR",
+                },
+            },
+        },
+    });
+
+    const clients = await prisma.party.findMany({
+        where: {
+            partyType: {
+                some: {
+                    type: "CONSUMIDOR",
+                },
+            },
+        },
         include: {
             partyAddress: true,
             user: true,
             partyPhone: true,
-        },
-        orderBy: {
-            createdAt: "desc"
+            _count: true,
         },
     });
+
+    return { count, clients }
 }
