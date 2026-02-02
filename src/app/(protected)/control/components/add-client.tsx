@@ -123,8 +123,10 @@ export const RegisterClientForm = () => {
         mutationFn: async (data: RegisterClientType) => {
             return await createClientAction(data);
         },
-        onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ["clients"] });
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({
+                queryKey: ["clients"],
+            });
 
             form.reset();
 

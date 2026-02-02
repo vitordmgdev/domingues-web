@@ -25,6 +25,7 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     {
         header: "Endereços",
         accessorKey: "_count",
+        id: "addresses",
         cell: ({ row }) => {
             return (
                 <Badge variant="secondary" className="w-full font-normal h-6">
@@ -36,6 +37,7 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     {
         header: "Telefones",
         accessorKey: "_count",
+        id: "phones",
         cell: ({ row }) => {
             return (
                 <Badge variant="secondary" className="w-full font-normal h-6">

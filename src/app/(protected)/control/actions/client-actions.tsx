@@ -12,7 +12,7 @@ export async function createClientAction(data: RegisterClientType) {
     }
 
     try {
-        return await prisma.party.create({
+        const client = await prisma.party.create({
             data: {
                 ...parsedData.data,
                 fullName: `${parsedData.data.firstName} ${parsedData.data.lastName}`,
@@ -23,6 +23,8 @@ export async function createClientAction(data: RegisterClientType) {
                 },
             },
         });
+
+        return client;
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === "P2002") {
@@ -53,10 +55,13 @@ export async function listClientsAction() {
                 },
             },
         },
+        orderBy: {
+            createdAt: "desc",
+        },
         include: {
             _count: true,
         },
     });
 
-    return { count, clients }
+    return { count, clients };
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon, SearchIcon } from "lucide-react";
+import { useState } from "react";
 import { listClientsAction } from "../actions/client-actions";
 import { AddClient } from "../components/add-client";
 import { clientsColumns } from "./clients-columns";
@@ -16,6 +17,8 @@ const ClientsPage = () => {
             return await listClientsAction();
         },
     });
+
+    const [filterValue, setFilterValue] = useState("");
 
     return (
         <>
@@ -30,6 +33,8 @@ const ClientsPage = () => {
                             disabled={isLoading}
                             placeholder="Pesquisar cliente"
                             className="w-64"
+                            value={filterValue}
+                            onChange={(e) => setFilterValue(e.target.value)}
                         />
 
                         <SearchIcon className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -47,6 +52,8 @@ const ClientsPage = () => {
                     columns={clientsColumns}
                     data={data?.clients || []}
                     isLoading={isLoading}
+                    filterValue={filterValue}
+                    setFilterValue={setFilterValue}
                 />
             </div>
         </>
