@@ -33,7 +33,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { cpfMask } from "@/utils/masks";
+import { cpfMask, phoneMask } from "@/utils/masks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMaskito } from "@maskito/react";
 import { PartyStatus } from "@prisma/client";
@@ -84,7 +84,7 @@ export const AddClient = ({
         <Dialog open={open} onOpenChange={onOpenChange}>
             {children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
-            <DialogContent>
+            <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
                     <DialogTitle>Adicionar cliente</DialogTitle>
 
@@ -109,10 +109,12 @@ export const RegisterClientForm = () => {
             cpf: "",
             status: "NOVO",
             description: "",
+            phone: "",
         },
     });
 
     const cpfInputRef = useMaskito({ options: cpfMask });
+    const phoneInputRef = useMaskito({ options: phoneMask });
 
     const queryClient = useQueryClient();
 
@@ -140,6 +142,7 @@ export const RegisterClientForm = () => {
     });
 
     async function createClient(data: RegisterClientType) {
+        console.log(data);
         await mutateCreateClient(data);
     }
 
@@ -149,86 +152,66 @@ export const RegisterClientForm = () => {
                 className="flex flex-col gap-4 mx-4 md:mx-0"
                 onSubmit={form.handleSubmit(createClient)}
             >
-                <div className="flex flex-col gap-2">
-                    <FormLabel className="max-[425px]:hidden">
-                        Nome completo
-                    </FormLabel>
+                <div className="grid grid-cols-[1fr_auto] gap-4">
+                    <div className="flex flex-col gap-2">
+                        <FormLabel className="max-[425px]:hidden">
+                            Nome completo
+                        </FormLabel>
 
-                    <div className="grid grid-cols-1 min-[425px]:grid-cols-2 gap-4">
-                        <FormField
-                            control={form.control}
-                            name="firstName"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="min-[425px]:hidden">
-                                        Nome
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Nome"
-                                            value={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value);
-                                            }}
-                                        />
-                                    </FormControl>
+                        <div className="grid grid-cols-1 min-[425px]:grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="firstName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="min-[425px]:hidden">
+                                            Nome
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Nome"
+                                                autoComplete="off"
+                                                value={field.value}
+                                                onChange={(e) => {
+                                                    field.onChange(
+                                                        e.target.value,
+                                                    );
+                                                }}
+                                            />
+                                        </FormControl>
 
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            control={form.control}
-                            name="lastName"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="min-[425px]:hidden">
-                                        Sobrenome
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Sobrenome"
-                                            value={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value);
-                                            }}
-                                        />
-                                    </FormControl>
+                            <FormField
+                                control={form.control}
+                                name="lastName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="min-[425px]:hidden">
+                                            Sobrenome
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Sobrenome"
+                                                autoComplete="off"
+                                                value={field.value}
+                                                onChange={(e) => {
+                                                    field.onChange(
+                                                        e.target.value,
+                                                    );
+                                                }}
+                                            />
+                                        </FormControl>
 
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>E-mail</FormLabel>
-                                <FormControl>
-                                    <div className="relative">
-                                        <Input
-                                            placeholder="example@email.com"
-                                            value={field.value}
-                                            onChange={(e) => {
-                                                field.onChange(e.target.value);
-                                            }}
-                                            className="pe-8.5"
-                                        />
-
-                                        <Mail className="absolute right-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                    </div>
-                                </FormControl>
-
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
 
                     <FormField
                         control={form.control}
@@ -248,7 +231,58 @@ export const RegisterClientForm = () => {
                                         ref={cpfInputRef}
                                     />
                                 </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>E-mail</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="example@email.com"
+                                            autoComplete="off"
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                            }}
+                                            className="ps-8.5"
+                                        />
+
+                                        <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                    </div>
+                                </FormControl>
+
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Telefone</FormLabel>
+
+                                <FormControl>
+                                    <Input
+                                        placeholder="(00) 0000-0000"
+                                        autoComplete="off"
+                                        value={field.value}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                        }}
+                                        ref={phoneInputRef}
+                                    />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -294,15 +328,13 @@ export const RegisterClientForm = () => {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Descrição</FormLabel>
-
                             <FormControl>
                                 <Textarea
-                                    placeholder="Digite uma descrição"
-                                    className="h-30 resize-none"
+                                    placeholder="Descrição"
+                                    className="resize-none h-30"
                                     {...field}
                                 />
                             </FormControl>
-
                             <FormMessage />
                         </FormItem>
                     )}

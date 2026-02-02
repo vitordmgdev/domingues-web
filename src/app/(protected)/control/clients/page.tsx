@@ -22,9 +22,7 @@ const ClientsPage = () => {
 
     return (
         <>
-            <h1 className="text-lg font-sans">
-                Clientes cadastrados {data?.count}{" "}
-            </h1>
+            <h1 className="text-xl font-sans">Clientes cadastrados</h1>
 
             <div className="w-full flex flex-col gap-4">
                 <header className="flex items-center justify-between gap-4">
@@ -32,12 +30,12 @@ const ClientsPage = () => {
                         <Input
                             disabled={isLoading}
                             placeholder="Pesquisar cliente"
-                            className="w-64"
+                            className="w-64 ps-8"
                             value={filterValue}
                             onChange={(e) => setFilterValue(e.target.value)}
                         />
 
-                        <SearchIcon className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     </div>
 
                     <AddClient>
@@ -48,13 +46,21 @@ const ClientsPage = () => {
                     </AddClient>
                 </header>
 
-                <DataTable
-                    columns={clientsColumns}
-                    data={data?.clients || []}
-                    isLoading={isLoading}
-                    filterValue={filterValue}
-                    setFilterValue={setFilterValue}
-                />
+                {error ? (
+                    <div className="flex items-center justify-center">
+                        <p className="text-destructive">
+                            Erro ao carregar clientes
+                        </p>
+                    </div>
+                ) : (
+                    <DataTable
+                        columns={clientsColumns}
+                        data={data?.clients || []}
+                        isLoading={isLoading}
+                        filterValue={filterValue}
+                        setFilterValue={setFilterValue}
+                    />
+                )}
             </div>
         </>
     );

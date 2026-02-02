@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className="last:text-end whitespace-nowrap border-r last:border-r-0"
+                                            className="last:text-end whitespace-nowrap border-r [&:nth-last-child(2)]:text-end [&:nth-last-child(2)]:border-r-0"
                                         >
                                             {header.isPlaceholder
                                                 ? null
@@ -109,7 +109,7 @@ export function DataTable<TData, TValue>({
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell
                                                 key={cell.id}
-                                                className="truncate h-12 last:text-end whitespace-nowrap border-r last:border-r-0"
+                                                className="truncate h-12 [&:nth-last-child(2)]:text-end whitespace-nowrap border-r last:border-r-0 [&:nth-last-child(2)]:border-r-0"
                                             >
                                                 {flexRender(
                                                     cell.column.columnDef.cell,

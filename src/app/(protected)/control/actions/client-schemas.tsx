@@ -23,6 +23,7 @@ export const registerClientSchema = z.object({
         }, "CPF inválido"),
     status: z.enum(Object.values(PartyStatus)),
     description: z.string().optional(),
+    phone: z.string().optional(),
 });
 
 export type RegisterClientType = z.infer<typeof registerClientSchema>;

@@ -1,8 +1,11 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { clientStatusLabelMap, clientStatusStylesMap } from "@/utils/maps";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
+import { MoreVertical } from "lucide-react";
+import { DropdownMenuClientActions } from "../components/dropdown-menu-client-actions";
 
 type ClientsColumnsProps = Prisma.PartyGetPayload<{
     include: {
@@ -19,30 +22,8 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         header: "E-mail",
         accessorKey: "email",
         cell: ({ row }) => {
-            return <span>{row.original.email}</span>;
-        },
-    },
-    {
-        header: "Endereços",
-        accessorKey: "_count",
-        id: "addresses",
-        cell: ({ row }) => {
             return (
-                <Badge variant="secondary" className="w-full font-normal h-6">
-                    {row.original._count.partyAddress} Endereços
-                </Badge>
-            );
-        },
-    },
-    {
-        header: "Telefones",
-        accessorKey: "_count",
-        id: "phones",
-        cell: ({ row }) => {
-            return (
-                <Badge variant="secondary" className="w-full font-normal h-6">
-                    {row.original._count.partyPhone} Telefones
-                </Badge>
+                <div className="max-w-60 truncate">{row.original.email}</div>
             );
         },
     },
@@ -73,18 +54,62 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         },
     },
     {
-        accessorKey: "createdAt",
+        header: "CPF",
+        accessorKey: "cpf",
+        cell: ({ row }) => {
+            const cpf = row.original.cpf;
+
+            return (
+                <div className="max-w-60 truncate">
+                    {cpf ? (
+                        <span>{cpf}</span>
+                    ) : (
+                        <div className="h-2 w-20 mx-auto rounded-full bg-muted" />
+                    )}
+                </div>
+            );
+        },
+    },
+    {
+        header: "CNPJ",
+        cell: ({ row }) => {
+            const cnpj = row.original.cnpj;
+            return <span>{cnpj ?? "Não informado"}</span>;
+        },
+    },
+    {
+        header: "Usuário",
+        cell: ({ row }) => {
+            const userId = row.original.userId;
+
+            return <span>{userId ?? "Não registrado"}</span>;
+        },
+    },
+    {
         header: "Data de cadastro",
         cell: ({ row }) => {
             const date = row.original.createdAt;
             return (
                 <span>
                     {date.toLocaleDateString("pt-BR", {
-                        day: "2-digit",
+                        day: "numeric",
                         month: "short",
                         year: "numeric",
                     })}
                 </span>
+            );
+        },
+    },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            return (
+                <DropdownMenuClientActions id={row.original.id}>
+                    <Button variant="ghost" size="icon-sm" autoFocus={false}>
+                        <span className="sr-only">Open menu</span>
+                        <MoreVertical className="size-4" />
+                    </Button>
+                </DropdownMenuClientActions>
             );
         },
     },
