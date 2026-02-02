@@ -36,7 +36,7 @@ const ClientsPage = () => {
                     </div>
 
                     <AddClient>
-                        <Button disabled={isLoading}>
+                        <Button disabled={isLoading} className="rounded-sm">
                             <PlusIcon />
                             Adicionar cliente
                         </Button>

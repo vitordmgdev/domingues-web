@@ -54,9 +54,6 @@ export async function listClientsAction() {
             },
         },
         include: {
-            partyAddress: true,
-            user: true,
-            partyPhone: true,
             _count: true,
         },
     });

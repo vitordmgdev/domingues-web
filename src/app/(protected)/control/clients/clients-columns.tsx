@@ -6,9 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 type ClientsColumnsProps = Prisma.PartyGetPayload<{
     include: {
-        partyAddress: true;
-        user: true;
-        partyPhone: true;
+        _count: true;
     };
 }>;
 
@@ -26,15 +24,22 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     },
     {
         header: "Endereços",
-        accessorKey: "partyAddress",
+        accessorKey: "_count",
         cell: ({ row }) => {
             return (
-                <Badge variant="outline" className="w-fit font-normal">
-                    {row.original.partyAddress.length === 0
-                        ? "Sem endereços"
-                        : row.original.partyAddress.length === 1
-                          ? "1 endereço"
-                          : `${row.original.partyAddress.length} endereços`}
+                <Badge variant="secondary" className="w-full font-normal h-6">
+                    {row.original._count.partyAddress} Endereços
+                </Badge>
+            );
+        },
+    },
+    {
+        header: "Telefones",
+        accessorKey: "_count",
+        cell: ({ row }) => {
+            return (
+                <Badge variant="secondary" className="w-full font-normal h-6">
+                    {row.original._count.partyPhone} Telefones
                 </Badge>
             );
         },
