@@ -1,5 +1,4 @@
 import { validateCPF } from "@/utils/validators";
-import { PartyStatus } from "@prisma/client";
 import z from "zod";
 
 export const registerClientSchema = z.object({
@@ -21,7 +20,6 @@ export const registerClientSchema = z.object({
 
             return validateCPF(cpf);
         }, "CPF inválido"),
-    status: z.enum(Object.values(PartyStatus)),
     description: z.string().optional(),
     phone: z.string().optional(),
 });

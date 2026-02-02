@@ -107,7 +107,6 @@ export const RegisterClientForm = () => {
             lastName: "",
             email: "",
             cpf: "",
-            status: "NOVO",
             description: "",
             phone: "",
         },
@@ -288,39 +287,6 @@ export const RegisterClientForm = () => {
                         )}
                     />
                 </div>
-
-                <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Status</FormLabel>
-                            <FormControl>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Selecione um status" />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                        {Object.values(PartyStatus).map(
-                                            (status) => (
-                                                <SelectItem
-                                                    key={status}
-                                                    value={status}
-                                                >
-                                                    {status}
-                                                </SelectItem>
-                                            ),
-                                        )}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
 
                 <FormField
                     control={form.control}
