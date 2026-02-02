@@ -50,13 +50,13 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
                 <Badge
                     variant="outline"
                     className={cn(
-                        "capitalize font-medium h-6 gap-2 rounded-md px-2.5 py-1",
+                        "capitalize font-medium h-6 gap-1.5 rounded-sm px-2 py-1",
                         styles.badge,
                     )}
                 >
                     <div
                         className={cn(
-                            "size-1.5 rounded-full shrink-0",
+                            "size-1 rounded-full shrink-0",
                             styles.dot,
                         )}
                     />

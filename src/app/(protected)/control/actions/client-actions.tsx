@@ -36,5 +36,8 @@ export async function listClientsAction() {
             user: true,
             partyPhone: true,
         },
+        orderBy: {
+            createdAt: "desc"
+        },
     });
 }
