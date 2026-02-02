@@ -7,7 +7,7 @@ export const Header = () => {
     const { sidebarIsOpen, setSidebarIsOpen } = useSidebarStore();
 
     return (
-        <header className="sidebar mt-2 ml-2 py-2 px-4 bg-sidebar w-fit border rounded-lg flex items-center gap-4">
+        <header className="w-fit p-2 border rounded-lg flex items-center gap-4 bg-sidebar">
             <SidebarTrigger
                 className="bg-transparent"
                 onClick={() => setSidebarIsOpen(!sidebarIsOpen)}

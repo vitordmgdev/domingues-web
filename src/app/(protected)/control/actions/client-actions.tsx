@@ -30,5 +30,11 @@ export async function createClientAction(data: RegisterClientType) {
 }
 
 export async function listClientsAction() {
-    return await prisma.party.findMany();
+    return await prisma.party.findMany({
+        include: {
+            partyAddress: true,
+            user: true,
+            partyPhone: true,
+        },
+    });
 }

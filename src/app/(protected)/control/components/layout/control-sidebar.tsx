@@ -26,12 +26,9 @@ export const ControlSidebar = ({ children }: { children: React.ReactNode }) => {
                 onOpenChange={setClientFormIsOpen}
             />
 
-            <SidebarInset>
-                <div className="flex flex-col">
-                    <Header />
-
-                    <div className="p-4">{children}</div>
-                </div>
+            <SidebarInset className="p-2 max-w-[1024px] mx-auto gap-4">
+                <Header />
+                {children}
             </SidebarInset>
         </SidebarProvider>
     );
