@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { clientStatusLabelMap, clientStatusStylesMap } from "@/utils/maps";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
+import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
 import { MoreVertical } from "lucide-react";
 import { DropdownMenuClientActions } from "../components/dropdown-menu-client-actions";
 
@@ -78,6 +79,25 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     },
     {
         header: "Data de cadastro",
+        accessorKey: "createdAt",
+        filterFn: (row, id, value) => {
+            const rowDate = new Date(row.getValue(id));
+            const { from, to } = value as { from?: Date; to?: Date };
+
+            if (!from) return true;
+
+            if (to) {
+                return isWithinInterval(rowDate, {
+                    start: startOfDay(from),
+                    end: endOfDay(to),
+                });
+            }
+
+            return isWithinInterval(rowDate, {
+                start: startOfDay(from),
+                end: endOfDay(from),
+            });
+        },
         cell: ({ row }) => {
             const date = row.original.createdAt;
             return (

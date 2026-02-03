@@ -2,6 +2,7 @@
 
 import {
     ColumnDef,
+    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -35,12 +36,14 @@ export function DataTable<TData, TValue>({
     data,
     filterValue,
     setFilterValue,
+    columnFilters,
 }: {
     isLoading: boolean;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     filterValue: string;
     setFilterValue: (value: string) => void;
+    columnFilters?: ColumnFiltersState;
 }) {
     const table = useReactTable({
         data: data,
@@ -51,6 +54,7 @@ export function DataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         state: {
             globalFilter: filterValue,
+            columnFilters,
         },
         onGlobalFilterChange: setFilterValue,
     });
