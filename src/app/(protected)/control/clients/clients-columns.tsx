@@ -58,16 +58,7 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         accessorKey: "cpf",
         cell: ({ row }) => {
             const cpf = row.original.cpf;
-
-            return (
-                <div className="max-w-60 truncate">
-                    {cpf ? (
-                        <span>{cpf}</span>
-                    ) : (
-                        <div className="h-2 w-20 mx-auto rounded-full bg-muted" />
-                    )}
-                </div>
-            );
+            return <span>{cpf ?? "Não informado"}</span>;
         },
     },
     {

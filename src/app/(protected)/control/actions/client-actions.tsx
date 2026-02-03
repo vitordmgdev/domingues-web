@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { maskCNPJ, maskCPF, serializableCNPJ, serializableCPF } from "@/utils/masks";
+import { serializableCNPJ, serializableCPF } from "@/utils/masks";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 import { RegisterClientType } from "./client-schemas";
 
@@ -15,6 +15,7 @@ export async function createClientAction(data: RegisterClientType) {
                 cpf: partyData.cpf || null,
                 cnpj: partyData.cnpj || null,
                 fullName: `${data.firstName} ${data.lastName}`,
+                status: "NOVO",
                 partyType: {
                     create: {
                         type: "CLIENTE",
@@ -114,7 +115,7 @@ export async function listClientsAction() {
 
     const clientsWithMaskedCpf = clients.map((client) => ({
         ...client,
-        cpf: serializableCPF(client.cpf!),
+        cpf: client.cpf ? serializableCPF(client.cpf) : null,
         cnpj: client.cnpj ? serializableCNPJ(client.cnpj) : null,
     }));
 

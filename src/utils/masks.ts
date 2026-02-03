@@ -76,18 +76,3 @@ export const serializableCNPJ = (value: string) => {
 
     return clean.replace(/^(\d{2})\d{6}(\d{4})(\d{2})$/, "$1.*******/$2-$3");
 };
-
-export const maskCPF = (value: string) => {
-    const clean = value.replace(/\D/g, "");
-
-    return clean.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
-};
-
-export const maskCNPJ = (value: string) => {
-    const clean = value.replace(/\D/g, "");
-
-    return clean.replace(
-        /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-        "$1.$2.$3/$4-$5",
-    );
-};
