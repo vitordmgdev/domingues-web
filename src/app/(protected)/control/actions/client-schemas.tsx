@@ -11,7 +11,7 @@ export const registerClientSchema = z.object({
         .min(3, "Sobrenome deve ter pelo menos 3 caracteres")
         .max(64, "Sobrenome deve ter menos de 64 caracteres")
         .optional(),
-    email: z.email().optional(),
+    email: z.email("E-mail inválido").optional(),
     cpf: z
         .string()
         .optional()
@@ -20,8 +20,23 @@ export const registerClientSchema = z.object({
 
             return validateCPF(cpf);
         }, "CPF inválido"),
-    description: z.string().optional(),
-    phone: z.string().optional(),
+    cnpj: z.string().optional(),
+    stateRegistration: z.string().optional(),
+    companyName: z.string().optional(),
+    companyFantasyName: z.string().optional(),
+    contact: z.object({
+        phone: z.string().optional(),
+        is_whatsapp: z.enum(["yes", "no"]).optional(),
+    }),
+    address: z.object({
+        zipCode: z.string().optional(),
+        state: z.string().optional(),
+        city: z.string().optional(),
+        street: z.string().optional(),
+        complement: z.string().optional(),
+        identifier: z.string().optional(),
+        district: z.string().optional(),
+    }),
 });
 
 export type RegisterClientType = z.infer<typeof registerClientSchema>;

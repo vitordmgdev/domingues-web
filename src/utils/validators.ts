@@ -22,3 +22,28 @@ export function validateCPF(cpf: string): boolean {
 
     return true;
 }
+
+export function validateCNPJ(cnpj: string): boolean {
+    const cleanCNPJ = cnpj.replace(/[\.\-\/]/g, "");
+
+    if (cleanCNPJ.length !== 14) return false;
+    if (/^(\d)\1+$/.test(cleanCNPJ)) return false;
+
+    let sum = 0;
+    for (let i = 0; i < 12; i++) {
+        sum += parseInt(cleanCNPJ.charAt(i)) * (12 - i);
+    }
+    let remainder = sum % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cleanCNPJ.charAt(12))) return false;
+
+    sum = 0;
+    for (let i = 0; i < 13; i++) {
+        sum += parseInt(cleanCNPJ.charAt(i)) * (13 - i);
+    }
+    remainder = sum % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cleanCNPJ.charAt(13))) return false;
+
+    return true;
+}

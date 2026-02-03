@@ -9,40 +9,35 @@ datasource db {
 model User {
   id            String    @id
   name          String
-  email         String
+  email         String    @unique
   emailVerified Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  sessions      Session[]
+  role          String?
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  onboardedAt   DateTime?
   accounts      Account[]
   party         Party?
+  sessions      Session[]
 
-  role       String?
-  banned     Boolean?  @default(false)
-  banReason  String?
-  banExpires DateTime?
-
-  onboardedAt DateTime?
-
-  @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
   impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
@@ -52,7 +47,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -62,6 +56,7 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("account")
@@ -72,34 +67,33 @@ model Verification {
   identifier String
   value      String
   expiresAt  DateTime
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("verification")
 }
 
 model Party {
-  id        String  @id @default(ulid())
-  userId    String? @unique
-  firstName String
-  lastName  String?
-  fullName  String  
-  email     String?
-  cpf       String? @unique
-  cnpj      String? @unique
-  description String?
-
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  partyType    PartyType[]
-  partyPhone   PartyPhone[]
-  partyAddress PartyAddress[]
-
-  status     PartyStatus @default(ATIVO)
-  archivedAt DateTime?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id                String         @id @default(ulid())
+  firstName         String
+  lastName          String?
+  fullName          String
+  email             String?
+  cpf               String?        @unique
+  cnpj              String?        @unique
+  status            PartyStatus    @default(NOVO)
+  archivedAt        DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  userId            String?        @unique
+  description       String?
+  companyName       String?
+  fantasyName       String?
+  stateRegistration String?
+  user              User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partyAddress      PartyAddress[]
+  partyPhone        PartyPhone[]
+  partyType         PartyType[]
 
   @@map("party")
 }
@@ -110,12 +104,10 @@ model PartyType {
   type      PartyEntities
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
-
-  party Party @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  party     Party         @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
   @@unique([partyId, type])
   @@index([partyId])
-
   @@map("party_type")
 }
 
@@ -127,32 +119,27 @@ model PartyPhone {
   isWhatsapp Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  party Party @relation(fields: [partyId], references: [id])
+  party      Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
   @@unique([partyId, phone])
   @@index([partyId])
-
   @@map("party_phone")
 }
 
 model PartyAddress {
-  id      String @id @default(ulid())
-  partyId String
-
-  name       String
+  id         String   @id @default(ulid())
+  partyId    String
+  name       String?
   identifier String?
-  number     String
   complement String?
-  district   String
-  city       String
-  state      String
-  zipCode    String
+  district   String?
+  city       String?
+  state      String?
+  zipCode    String?
   isPrimary  Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  party Party @relation(fields: [partyId], references: [id])
+  party      Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
   @@index([partyId])
   @@map("party_address")
@@ -169,8 +156,9 @@ enum PartyStatus {
 }
 
 enum PartyEntities {
-  CONSUMIDOR
-  FUNCIONARIO
-  PARCEIRO
+  LEAD
+  CLIENTE
+  COLABORADOR
   FORNECEDOR
+  PARCEIRO
 }

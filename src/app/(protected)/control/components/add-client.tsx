@@ -25,18 +25,12 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { cpfMask, phoneMask } from "@/utils/masks";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cepMask, cnpjMaskInput, cpfMaskInput, phoneMask } from "@/utils/masks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMaskito } from "@maskito/react";
-import { PartyStatus } from "@prisma/client";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Mail } from "lucide-react";
@@ -93,7 +87,11 @@ export const AddClient = ({
                     </DialogDescription>
                 </DialogHeader>
 
-                <RegisterClientForm />
+                <ScrollArea className="max-h-[400px] relative p-1">
+                    <RegisterClientForm />
+
+                    <ScrollBar />
+                </ScrollArea>
             </DialogContent>
         </Dialog>
     );
@@ -101,19 +99,45 @@ export const AddClient = ({
 
 export const RegisterClientForm = () => {
     const form = useForm<RegisterClientType>({
+        mode: "onBlur",
         resolver: zodResolver(registerClientSchema),
         defaultValues: {
             firstName: "",
             lastName: "",
             email: "",
             cpf: "",
-            description: "",
-            phone: "",
+            cnpj: "",
+            contact: {
+                phone: "",
+                is_whatsapp: "yes",
+            },
+            address: {
+                zipCode: "",
+                state: "",
+                city: "",
+                street: "",
+                complement: "",
+                identifier: "",
+                district: "",
+            },
         },
     });
 
-    const cpfInputRef = useMaskito({ options: cpfMask });
-    const phoneInputRef = useMaskito({ options: phoneMask });
+    const cpfInputRef = useMaskito({
+        options: cpfMaskInput,
+    });
+
+    const cnpjInputRef = useMaskito({
+        options: cnpjMaskInput,
+    });
+
+    const phoneInputRef = useMaskito({
+        options: phoneMask,
+    });
+
+    const cepInputRef = useMaskito({
+        options: cepMask,
+    });
 
     const queryClient = useQueryClient();
 
@@ -141,102 +165,95 @@ export const RegisterClientForm = () => {
     });
 
     async function createClient(data: RegisterClientType) {
-        console.log(data);
         await mutateCreateClient(data);
     }
 
     return (
         <Form {...form}>
             <form
-                className="flex flex-col gap-4 mx-4 md:mx-0"
+                className="flex flex-col gap-4 mx-4 md:mx-0 relative"
                 onSubmit={form.handleSubmit(createClient)}
             >
-                <div className="grid grid-cols-[1fr_auto] gap-4">
-                    <div className="flex flex-col gap-2">
-                        <FormLabel className="max-[425px]:hidden">
-                            Nome completo
-                        </FormLabel>
+                <div className="flex flex-col gap-2">
+                    <FormLabel className="max-[425px]:hidden">
+                        Nome completo
+                    </FormLabel>
 
-                        <div className="grid grid-cols-1 min-[425px]:grid-cols-2 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="firstName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="min-[425px]:hidden">
-                                            Nome
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Nome"
-                                                autoComplete="off"
-                                                value={field.value}
-                                                onChange={(e) => {
-                                                    field.onChange(
-                                                        e.target.value,
-                                                    );
-                                                }}
-                                            />
-                                        </FormControl>
+                    <div className="grid grid-cols-1 min-[425px]:grid-cols-2 items-start gap-4">
+                        <FormField
+                            control={form.control}
+                            name="firstName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="min-[425px]:hidden">
+                                        Nome
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Nome"
+                                            autoComplete="off"
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                            }}
+                                        />
+                                    </FormControl>
 
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                            <FormField
-                                control={form.control}
-                                name="lastName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="min-[425px]:hidden">
-                                            Sobrenome
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Sobrenome"
-                                                autoComplete="off"
-                                                value={field.value}
-                                                onChange={(e) => {
-                                                    field.onChange(
-                                                        e.target.value,
-                                                    );
-                                                }}
-                                            />
-                                        </FormControl>
+                        <FormField
+                            control={form.control}
+                            name="lastName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="min-[425px]:hidden">
+                                        Sobrenome
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Sobrenome"
+                                            autoComplete="off"
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                            }}
+                                        />
+                                    </FormControl>
 
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
+                </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] items-start gap-4">
                     <FormField
                         control={form.control}
-                        name="cpf"
+                        name="contact.phone"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>CPF</FormLabel>
+                                <FormLabel>Telefone</FormLabel>
+
                                 <FormControl>
                                     <Input
-                                        placeholder="000.000.000-00"
-                                        className="w-full md:w-32"
+                                        placeholder="(00) 0000-0000"
                                         autoComplete="off"
                                         value={field.value}
                                         onChange={(e) => {
                                             field.onChange(e.target.value);
                                         }}
-                                        ref={cpfInputRef}
+                                        ref={phoneInputRef}
                                     />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
                     <FormField
                         control={form.control}
                         name="email"
@@ -263,23 +280,246 @@ export const RegisterClientForm = () => {
                             </FormItem>
                         )}
                     />
+                </div>
 
+                <FormField
+                    control={form.control}
+                    name="contact.is_whatsapp"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>É WhatsApp?</FormLabel>
+
+                            <RadioGroup
+                                {...field}
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="flex"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <RadioGroupItem value="yes" />
+                                    <Label>Sim</Label>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <RadioGroupItem value="no" />
+                                    <Label>Não</Label>
+                                </div>
+                            </RadioGroup>
+                        </FormItem>
+                    )}
+                />
+
+                <div className="grid grid-cols-2 items-start gap-4 w-full">
                     <FormField
                         control={form.control}
-                        name="phone"
+                        name="cpf"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Telefone</FormLabel>
-
+                                <FormLabel>CPF</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="(00) 0000-0000"
+                                        placeholder="000.000.000-00"
+                                        className="w-full"
                                         autoComplete="off"
                                         value={field.value}
                                         onChange={(e) => {
                                             field.onChange(e.target.value);
                                         }}
-                                        ref={phoneInputRef}
+                                        ref={cpfInputRef}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="cnpj"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>CNPJ</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="00.000.000/0000-00"
+                                        className="w-full"
+                                        autoComplete="off"
+                                        value={field.value}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                        }}
+                                        ref={cnpjInputRef}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="companyName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Razão Social</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Razão Social"
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="companyFantasyName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Nome Fantasia</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Nome Fantasia"
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="stateRegistration"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>IE - Inscrição Estadual</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Inscrição Estadual"
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <div className="grid grid-cols-[auto_1fr_1fr] items-start gap-4">
+                    <FormField
+                        control={form.control}
+                        name="address.zipCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>CEP</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="00000-000"
+                                        className="max-w-30"
+                                        autoComplete="off"
+                                        {...field}
+                                        ref={cepInputRef}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="address.state"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Estado</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Estado"
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="address.city"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Cidade</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Cidade"
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <div className="grid grid-cols-[1fr_1fr_auto] items-start gap-4">
+                    <FormField
+                        control={form.control}
+                        name="address.district"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Bairro</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Bairro"
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="address.street"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Rua</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Rua"
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="address.identifier"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>N°</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Identificador"
+                                        className="max-w-30"
+                                        autoComplete="off"
+                                        {...field}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -290,14 +530,14 @@ export const RegisterClientForm = () => {
 
                 <FormField
                     control={form.control}
-                    name="description"
+                    name="address.complement"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Descrição</FormLabel>
+                            <FormLabel>Complemento</FormLabel>
                             <FormControl>
-                                <Textarea
-                                    placeholder="Descrição"
-                                    className="resize-none h-30"
+                                <Input
+                                    placeholder="Complemento"
+                                    autoComplete="off"
                                     {...field}
                                 />
                             </FormControl>
@@ -306,8 +546,13 @@ export const RegisterClientForm = () => {
                     )}
                 />
 
-                <div className="flex justify-end gap-4">
-                    <Button type="submit" disabled={isPendingCreateClient}>
+                <div className="flex justify-end gap-4 mt-4 sticky bottom-0 bg-background pt-4 border-t z-10">
+                    <Button
+                        type="submit"
+                        disabled={
+                            isPendingCreateClient || !form.formState.isValid
+                        }
+                    >
                         {isPendingCreateClient && (
                             <Loader2 className="size-4 animate-spin" />
                         )}

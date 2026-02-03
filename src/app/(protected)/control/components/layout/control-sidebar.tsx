@@ -26,7 +26,7 @@ export const ControlSidebar = ({ children }: { children: React.ReactNode }) => {
                 onOpenChange={setClientFormIsOpen}
             />
 
-            <SidebarInset className="p-2 max-w-[1480px] mx-auto gap-4">
+            <SidebarInset className="p-2 max-w-[1080px] mx-auto gap-4">
                 <Header />
                 {children}
             </SidebarInset>
