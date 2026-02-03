@@ -87,11 +87,7 @@ export const AddClient = ({
                     </DialogDescription>
                 </DialogHeader>
 
-                <ScrollArea className="max-h-[400px] relative p-1">
-                    <RegisterClientForm />
-
-                    <ScrollBar />
-                </ScrollArea>
+                <RegisterClientForm />
             </DialogContent>
         </Dialog>
     );
@@ -316,7 +312,7 @@ export const RegisterClientForm = () => {
                         )}
                     />
 
-                    <div className="grid grid-cols-2 items-start gap-4 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4 w-full">
                         <FormField
                             control={form.control}
                             name="cpf"
@@ -364,7 +360,7 @@ export const RegisterClientForm = () => {
                         />
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <FormField
                             control={form.control}
                             name="companyName"
@@ -422,7 +418,7 @@ export const RegisterClientForm = () => {
                         />
                     </div>
 
-                    <div className="grid grid-cols-[auto_1fr_1fr] items-start gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr_1fr] items-start gap-4">
                         <FormField
                             control={form.control}
                             name="address.zipCode"
@@ -432,7 +428,7 @@ export const RegisterClientForm = () => {
                                     <FormControl>
                                         <Input
                                             placeholder="00000-000"
-                                            className="max-w-30"
+                                            className="w-full sm:max-w-30"
                                             autoComplete="off"
                                             {...field}
                                             ref={cepInputRef}
@@ -480,7 +476,7 @@ export const RegisterClientForm = () => {
                         />
                     </div>
 
-                    <div className="grid grid-cols-[1fr_1fr_auto] items-start gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] items-start gap-4">
                         <FormField
                             control={form.control}
                             name="address.district"
@@ -526,7 +522,7 @@ export const RegisterClientForm = () => {
                                     <FormControl>
                                         <Input
                                             placeholder="Identificador"
-                                            className="max-w-30"
+                                            className="w-full sm:max-w-30"
                                             autoComplete="off"
                                             {...field}
                                         />
