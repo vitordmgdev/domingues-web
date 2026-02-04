@@ -7,10 +7,21 @@ const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
-const prisma = new PrismaClient({
-    adapter,
-    log: ["query", "error", "warn"],
-});
+const prismaClientSingleton = () => {
+    return new PrismaClient({
+        adapter,
+        log: ["query", "error", "warn"],
+    });
+};
 
-export default prisma;      
-        
+declare global {
+    var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
+}
+
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+
+if (process.env.NODE_ENV !== "production") {
+    globalThis.prismaGlobal = prisma;
+}
+
+export default prisma;

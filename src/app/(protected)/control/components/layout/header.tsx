@@ -1,7 +1,7 @@
 import { LogoMarkSvg } from "@/components/logo";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { useSidebarStore } from "../../store/control-store";
+import { useSidebarStore } from "../../../../../store/control-store";
 
 export const Header = () => {
     const { sidebarIsOpen, setSidebarIsOpen } = useSidebarStore();

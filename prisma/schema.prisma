@@ -81,7 +81,6 @@ model Party {
   email             String?
   cpf               String?        @unique
   cnpj              String?        @unique
-  status            PartyStatus    @default(NOVO)
   archivedAt        DateTime?
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
@@ -94,6 +93,7 @@ model Party {
   partyAddress      PartyAddress[]
   partyPhone        PartyPhone[]
   partyType         PartyType[]
+  projects          Project[]
 
   @@map("party")
 }
@@ -105,6 +105,7 @@ model PartyType {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   party     Party         @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  status    PartyTypeStatus   @default(NOVO)
 
   @@unique([partyId, type])
   @@index([partyId])
@@ -145,14 +146,33 @@ model PartyAddress {
   @@map("party_address")
 }
 
-enum PartyStatus {
-  ATIVO
-  INATIVO
+model Project {
+  id String @id @default(ulid())
+  partyId String
+  title String
+  startedAt DateTime
+  finishedAt DateTime?
+  deadlineDate DateTime?
+  priority PriorityStatus
+
+  party Party @relation(fields: [partyId], references: [id], onDelete: NoAction)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PriorityStatus {
+  BAIXA
+  MEDIA
+  ALTA
+}
+
+enum PartyTypeStatus {
+  NOVO
+  SUSPENSO
+  CONTATO
   INTERESSE
   PERDA
-  NEGOCIACAO
-  CONTATO
-  NOVO
 }
 
 enum PartyEntities {

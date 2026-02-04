@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { serializableCNPJ, serializableCPF } from "@/utils/masks";
+import { PartyTypeStatus } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 import { RegisterClientType } from "./client-schemas";
 
@@ -15,10 +15,10 @@ export async function createClientAction(data: RegisterClientType) {
                 cpf: partyData.cpf || null,
                 cnpj: partyData.cnpj || null,
                 fullName: `${data.firstName} ${data.lastName}`,
-                status: "NOVO",
                 partyType: {
                     create: {
                         type: "CLIENTE",
+                        status: PartyTypeStatus.NOVO,
                     },
                 },
             },
@@ -87,39 +87,53 @@ export async function createClientAction(data: RegisterClientType) {
 }
 
 export async function listClientsAction() {
-    const count = await prisma.party.count({
-        where: {
-            partyType: {
-                some: {
-                    type: "CLIENTE",
+    try {
+        const count = await prisma.party.count({
+            where: {
+                partyType: {
+                    some: {
+                        type: "CLIENTE",
+                    },
                 },
             },
-        },
-    });
+        });
 
-    const clients = await prisma.party.findMany({
-        where: {
-            partyType: {
-                some: {
-                    type: "CLIENTE",
+        const clients = await prisma.party.findMany({
+            where: {
+                partyType: {
+                    some: {
+                        type: "CLIENTE",
+                    },
                 },
             },
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
-        include: {
-            _count: true,
-        },
-    });
+            orderBy: {
+                createdAt: "desc",
+            },
+            include: {
+                _count: true,
+                partyType: {
+                    where: {
+                        type: "CLIENTE",
+                    },
+                },
+                partyPhone: {
+                    where: {
+                        isPrimary: true,
+                    },
+                },
+                partyAddress: {
+                    where: {
+                        isPrimary: true,
+                    },
+                },
+            },
+        });
 
-    const clientsWithMaskedCpf = clients.map((client) => ({
-        ...client,
-        cpf: client.cpf ? serializableCPF(client.cpf) : null,
-        cnpj: client.cnpj ? serializableCNPJ(client.cnpj) : null,
-    }));
-
-    return { count, clients: clientsWithMaskedCpf };
+        return { count, clients };
+    } catch (error) {
+        console.error("Error in listClientsAction:", error);
+        throw error;
+    }
 }
 
 export async function getClientAction(id: string) {
@@ -131,9 +145,12 @@ export async function getClientAction(id: string) {
             include: {
                 partyAddress: true,
                 partyPhone: true,
-                partyType: true,
-                user: true,
-                _count: true,
+                partyType: {
+                    select: {
+                        status: true,
+                        type: true,
+                    },
+                },
             },
         });
 

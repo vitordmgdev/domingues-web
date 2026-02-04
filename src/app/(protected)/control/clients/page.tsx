@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { clientStatusLabelMap } from "@/utils/maps";
+import { PartyTypeStatus } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnFiltersState } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -85,13 +86,16 @@ const ClientsPage = () => {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">Todos</SelectItem>
-                                {Object.entries(clientStatusLabelMap).map(
-                                    ([key, label]) => (
-                                        <SelectItem key={key} value={key}>
-                                            {label}
-                                        </SelectItem>
-                                    ),
-                                )}
+
+                                {Object.keys(PartyTypeStatus).map((status) => (
+                                    <SelectItem key={status} value={status}>
+                                        {
+                                            clientStatusLabelMap[
+                                                status as PartyTypeStatus
+                                            ]
+                                        }
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
 

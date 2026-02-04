@@ -3,7 +3,7 @@
 import { AppSidebar } from "@/app/(protected)/control/components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useState } from "react";
-import { useSidebarStore } from "../../store/control-store";
+import { useSidebarStore } from "../../../../../store/control-store";
 import { AddClient } from "../add-client";
 import { Header } from "./header";
 

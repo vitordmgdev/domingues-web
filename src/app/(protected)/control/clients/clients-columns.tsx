@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { clientStatusLabelMap, clientStatusStylesMap } from "@/utils/maps";
-import { Prisma } from "@prisma/client";
+import { PartyTypeStatus, Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import {
     endOfDay,
@@ -17,6 +17,22 @@ import { DropdownMenuClientActions } from "../components/dropdown-menu-client-ac
 type ClientsColumnsProps = Prisma.PartyGetPayload<{
     include: {
         _count: true;
+        partyType: {
+            select: {
+                status: true;
+                type: true;
+            };
+        };
+        partyPhone: {
+            where: {
+                isPrimary: true;
+            };
+        };
+        partyAddress: {
+            where: {
+                isPrimary: true;
+            };
+        };
     };
 }>;
 
@@ -38,6 +54,38 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
                         <ArrowUpDown className="size-4" />
                     </Button>
                 </div>
+            );
+        },
+    },
+    {
+        accessorFn: (row) =>
+            row.partyType.find((partyType) => partyType.type === "CLIENTE")
+                ?.status,
+        id: "status",
+        header: "Status",
+        cell: ({ row }) => {
+            const status = row.getValue("status") as PartyTypeStatus;
+
+            if (!status) return null;
+
+            const styles = clientStatusStylesMap[status];
+
+            return (
+                <Badge
+                    variant="outline"
+                    className={cn(
+                        "capitalize font-medium h-6 gap-1.5 rounded-sm px-2 py-1",
+                        styles.badge,
+                    )}
+                >
+                    <div
+                        className={cn(
+                            "size-1 rounded-full shrink-0",
+                            styles.dot,
+                        )}
+                    />
+                    {clientStatusLabelMap[status]}
+                </Badge>
             );
         },
     },
@@ -67,44 +115,15 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         },
     },
     {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: "phone",
+        header: "Telefone",
         cell: ({ row }) => {
-            const status = row.original.status;
-            const styles = clientStatusStylesMap[status];
-
             return (
-                <Badge
-                    variant="outline"
-                    className={cn(
-                        "capitalize font-medium h-6 gap-1.5 rounded-sm px-2 py-1",
-                        styles.badge,
-                    )}
-                >
-                    <div
-                        className={cn(
-                            "size-1 rounded-full shrink-0",
-                            styles.dot,
-                        )}
-                    />
-                    {clientStatusLabelMap[status]}
-                </Badge>
+                <span>
+                    {row.original.partyPhone.find((phone) => phone.isPrimary)
+                        ?.phone ?? ""}
+                </span>
             );
-        },
-    },
-    {
-        header: "CPF",
-        accessorKey: "cpf",
-        cell: ({ row }) => {
-            const cpf = row.original.cpf;
-            return <span>{cpf ?? "Não informado"}</span>;
-        },
-    },
-    {
-        header: "CNPJ",
-        cell: ({ row }) => {
-            const cnpj = row.original.cnpj;
-            return <span>{cnpj ?? "Não informado"}</span>;
         },
     },
     {
