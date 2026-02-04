@@ -14,7 +14,7 @@ import {
     SelectContent,
     SelectItem,
     SelectTrigger,
-    SelectValue,
+    SelectValue
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { clientStatusLabelMap } from "@/utils/maps";
@@ -81,7 +81,7 @@ const ClientsPage = () => {
                             value={statusFilter}
                             onValueChange={setStatusFilter}
                         >
-                            <SelectTrigger className="w-32 border-none bg-transparent dark:bg-transparent">
+                            <SelectTrigger className="w-32 border-none bg-transparent dark:bg-transparent p-2">
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>

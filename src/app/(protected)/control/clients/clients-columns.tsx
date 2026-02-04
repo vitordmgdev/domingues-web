@@ -72,7 +72,6 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
 
             return (
                 <Badge
-                    variant="outline"
                     className={cn(
                         "capitalize font-medium h-6 gap-1.5 rounded-sm px-2 py-1",
                         styles.badge,
@@ -128,7 +127,23 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     },
     {
         accessorKey: "updatedAt",
-        header: "Última atualização",
+        header: ({ column }) => {
+            return (
+                <div className="flex justify-between items-center">
+                    Data de atualização
+                    <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                        className="p-0 hover:bg-transparent"
+                    >
+                        <ArrowUpDown className="size-4" />
+                    </Button>
+                </div>
+            );
+        },
         cell: ({ row }) => {
             const date = row.original.updatedAt;
             return (
