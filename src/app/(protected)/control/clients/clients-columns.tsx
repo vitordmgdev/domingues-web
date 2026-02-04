@@ -4,7 +4,13 @@ import { cn } from "@/lib/utils";
 import { clientStatusLabelMap, clientStatusStylesMap } from "@/utils/maps";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
+import {
+    endOfDay,
+    formatDistanceToNow,
+    isWithinInterval,
+    startOfDay,
+} from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { ArrowUpDown, MoreVertical } from "lucide-react";
 import { DropdownMenuClientActions } from "../components/dropdown-menu-client-actions";
 
@@ -102,11 +108,18 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         },
     },
     {
-        header: "Usuário",
+        accessorKey: "updatedAt",
+        header: "Última atualização",
         cell: ({ row }) => {
-            const userId = row.original.userId;
-
-            return <span>{userId ?? "Não registrado"}</span>;
+            const date = row.original.updatedAt;
+            return (
+                <span>
+                    {formatDistanceToNow(date, {
+                        addSuffix: true,
+                        locale: ptBR,
+                    })}
+                </span>
+            );
         },
     },
     {
