@@ -42,6 +42,8 @@ const ClientDetailsPage = () => {
                 {isLoading && (
                     <div className="flex items-center gap-4">
                         <Skeleton className="h-6 w-12 rounded-sm" />
+
+                        <Skeleton className="h-6 w-48 rounded-sm" />
                     </div>
                 )}
 

@@ -96,7 +96,9 @@ export function AppSidebar({
             </SidebarContent>
 
             <SidebarFooter>
-                {isPending && <Skeleton className="h-12 w-full" />}
+                {isPending && (
+                    <Skeleton className="group-data-[collapsible=icon]:h-8 h-12 w-full" />
+                )}
 
                 {session && <NavUser user={session.user} />}
             </SidebarFooter>
