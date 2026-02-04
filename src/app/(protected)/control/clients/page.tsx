@@ -60,25 +60,27 @@ const ClientsPage = () => {
     return (
         <>
             <div className="w-full flex flex-col gap-4">
-                <header className="flex items-center justify-between gap-4">
-                    <div className="flex gap-4">
+                <header className="flex items-center justify-between gap-4 p-4 border rounded-md">
+                    <div className="flex gap-2">
                         <div className="relative">
                             <Input
                                 disabled={isLoading}
-                                placeholder="Pesquisar cliente"
-                                className="w-64 ps-8"
+                                placeholder="Pesquisar cliente..."
+                                className="w-64 ps-8 border-none bg-transparent dark:bg-transparent"
                                 value={filterValue}
                                 onChange={(e) => setFilterValue(e.target.value)}
                             />
 
                             <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         </div>
+                    </div>
 
+                    <div className="flex gap-4">
                         <Select
                             value={statusFilter}
                             onValueChange={setStatusFilter}
                         >
-                            <SelectTrigger className="w-[180px]">
+                            <SelectTrigger className="w-32 border-none bg-transparent dark:bg-transparent">
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>
@@ -98,7 +100,7 @@ const ClientsPage = () => {
                                 <Button
                                     variant={"outline"}
                                     className={cn(
-                                        "w-[240px] justify-start text-left font-normal",
+                                        "w-[220px] justify-start text-left font-normal border-none bg-transparent dark:bg-transparent",
                                         !dateFilter && "text-muted-foreground",
                                     )}
                                 >
@@ -132,7 +134,6 @@ const ClientsPage = () => {
                                 align="start"
                             >
                                 <Calendar
-                                    initialFocus
                                     mode="range"
                                     defaultMonth={dateFilter?.from}
                                     selected={dateFilter}
@@ -142,14 +143,18 @@ const ClientsPage = () => {
                                 />
                             </PopoverContent>
                         </Popover>
-                    </div>
 
-                    <AddClient>
-                        <Button disabled={isLoading} className="rounded-sm">
-                            <PlusIcon />
-                            Adicionar cliente
-                        </Button>
-                    </AddClient>
+                        <AddClient>
+                            <Button
+                                variant="outline"
+                                disabled={isLoading}
+                                className="rounded-sm"
+                            >
+                                <PlusIcon />
+                                Adicionar cliente
+                            </Button>
+                        </AddClient>
+                    </div>
                 </header>
 
                 {error ? (

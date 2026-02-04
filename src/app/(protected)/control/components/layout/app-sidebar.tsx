@@ -14,7 +14,6 @@ import {
     ActivityIcon,
     Bot,
     CalendarDaysIcon,
-    Contrast,
     LayoutDashboardIcon,
     PlusIcon,
     SquareKanbanIcon,
@@ -48,7 +47,7 @@ export function AppSidebar({
                 title: "Chat IA",
                 url: "/control/ia",
                 icon: Bot,
-            }
+            },
         ],
         navCrm: [
             {
@@ -82,13 +81,6 @@ export function AppSidebar({
                 icon: ActivityIcon,
             },
         ],
-        navSecondary: [
-            {
-                title: "Alterar Tema",
-                url: "#",
-                icon: Contrast,
-            },
-        ],
     };
 
     const { data: session, isPending } = authClient.useSession();
@@ -100,7 +92,7 @@ export function AppSidebar({
 
                 <Nav label="CRM" items={data.navCrm} />
 
-                <NavSecondary items={data.navSecondary} className="mt-auto" />
+                <NavSecondary className="mt-auto" />
             </SidebarContent>
 
             <SidebarFooter>

@@ -5,7 +5,7 @@ import { clientStatusLabelMap, clientStatusStylesMap } from "@/utils/maps";
 import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
-import { MoreVertical } from "lucide-react";
+import { ArrowUpDown, MoreVertical } from "lucide-react";
 import { DropdownMenuClientActions } from "../components/dropdown-menu-client-actions";
 
 type ClientsColumnsProps = Prisma.PartyGetPayload<{
@@ -16,11 +16,43 @@ type ClientsColumnsProps = Prisma.PartyGetPayload<{
 
 export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     {
-        header: "Nome completo",
         accessorKey: "fullName",
+        header: ({ column }) => {
+            return (
+                <div className="flex justify-between items-center">
+                    Nome completo
+                    <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                        className="p-0 hover:bg-transparent"
+                    >
+                        <ArrowUpDown className="size-4" />
+                    </Button>
+                </div>
+            );
+        },
     },
     {
-        header: "E-mail",
+        header: ({ column }) => {
+            return (
+                <div className="flex justify-between items-center">
+                    E-mail
+                    <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                        className="p-0 hover:bg-transparent"
+                    >
+                        <ArrowUpDown className="size-4" />
+                    </Button>
+                </div>
+            );
+        },
         accessorKey: "email",
         cell: ({ row }) => {
             return (
@@ -78,7 +110,23 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         },
     },
     {
-        header: "Data de cadastro",
+        header: ({ column }) => {
+            return (
+                <div className="flex justify-between items-center">
+                    Data de cadastro
+                    <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                        className="p-0 hover:bg-transparent"
+                    >
+                        <ArrowUpDown className="size-4" />
+                    </Button>
+                </div>
+            );
+        },
         accessorKey: "createdAt",
         filterFn: (row, id, value) => {
             const rowDate = new Date(row.getValue(id));

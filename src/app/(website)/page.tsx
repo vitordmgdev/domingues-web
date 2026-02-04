@@ -182,10 +182,7 @@ export default function LandingPage() {
 
                         <div className="flex w-full justify-between items-center mt-8">
                             <div className="flex gap-4 flex-wrap">
-                                <Button
-                                    className="w-fit rounded-full"
-                                    variant="brand"
-                                >
+                                <Button className="w-fit rounded-full">
                                     <SwatchBook className="size-4" />
                                     Veja nosso portfólio
                                 </Button>
@@ -197,7 +194,6 @@ export default function LandingPage() {
                         {socialMediaLinks.map((link) => (
                             <Button
                                 className="rounded-none"
-                                variant="brand"
                                 size="icon-lg"
                                 asChild
                             >

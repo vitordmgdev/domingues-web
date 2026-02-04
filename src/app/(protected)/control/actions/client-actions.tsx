@@ -133,7 +133,7 @@ export async function getClientAction(id: string) {
                 partyPhone: true,
                 partyType: true,
                 user: true,
-                _count: true
+                _count: true,
             },
         });
 

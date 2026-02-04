@@ -3,10 +3,12 @@
 import {
     ColumnDef,
     ColumnFiltersState,
+    SortingState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
+    getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 
@@ -19,6 +21,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { ChevronFirstIcon, ChevronLastIcon } from "lucide-react";
+import { useState } from "react";
 import {
     Pagination,
     PaginationContent,
@@ -45,18 +48,23 @@ export function DataTable<TData, TValue>({
     setFilterValue: (value: string) => void;
     columnFilters?: ColumnFiltersState;
 }) {
+    const [sorting, setSorting] = useState<SortingState>([]);
+
     const table = useReactTable({
         data: data,
         columns: columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         enableGlobalFilter: true,
         getFilteredRowModel: getFilteredRowModel(),
         state: {
             globalFilter: filterValue,
             columnFilters,
+            sorting,
         },
         onGlobalFilterChange: setFilterValue,
+        onSortingChange: setSorting,
     });
 
     return (
