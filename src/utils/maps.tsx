@@ -1,4 +1,11 @@
-import { PartyTypeStatus } from "@prisma/client";
+import { PartyTypeStatus, PriorityStatus } from "@prisma/client";
+import {
+    LucideIcon,
+    SignalHighIcon,
+    SignalIcon,
+    SignalLowIcon,
+    SignalMediumIcon,
+} from "lucide-react";
 
 export const clientStatusLabelMap: Record<PartyTypeStatus, string> = {
     SUSPENSO: "Suspenso",
@@ -31,5 +38,45 @@ export const clientStatusStylesMap: Record<
     NOVO: {
         badge: "bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-200/50 dark:border-sky-800/50",
         dot: "bg-sky-500",
+    },
+};
+
+interface MapProps {
+    label: string;
+    icon: LucideIcon;
+    style: {
+        bg: string;
+        text: string;
+        border: string;
+    };
+}
+
+export const projectPriorityMap: Record<PriorityStatus, MapProps> = {
+    ALTA: {
+        label: "Alta",
+        icon: SignalIcon,
+        style: {
+            bg: "bg-red-500/20",
+            text: "text-red-600 dark:text-red-400",
+            border: "border-red-200/60 dark:border-red-800/60",
+        },
+    },
+    MEDIA: {
+        label: "Média",
+        icon: SignalMediumIcon,
+        style: {
+            bg: "bg-yellow-500/20",
+            text: "text-yellow-600 dark:text-yellow-400",
+            border: "border-yellow-200/60 dark:border-yellow-800/60",
+        },
+    },
+    BAIXA: {
+        label: "Baixa",
+        icon: SignalLowIcon,
+        style: {
+            bg: "bg-green-500/20",
+            text: "text-green-600 dark:text-green-400",
+            border: "border-green-200/60 dark:border-green-800/60",
+        },
     },
 };

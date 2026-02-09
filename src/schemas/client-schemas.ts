@@ -1,7 +1,7 @@
 import { validateCPF } from "@/utils/validators";
 import z from "zod";
 
-export const registerClientSchema = z.object({
+export const registerPartyClientSchema = z.object({
     firstName: z
         .string()
         .min(3, "Nome deve ter pelo menos 3 caracteres")
@@ -39,11 +39,11 @@ export const registerClientSchema = z.object({
     }),
 });
 
-export type RegisterClientType = z.infer<typeof registerClientSchema>;
+export type RegisterClientType = z.infer<typeof registerPartyClientSchema>;
 
 export const updateClientSchema = z.object({
     id: z.string(),
-    email: z.string().email("E-mail inválido").optional().or(z.literal("")),
+    email: z.email("E-mail inválido").optional().or(z.literal("")),
     firstName: z
         .string()
         .min(3, "Nome deve ter pelo menos 3 caracteres")

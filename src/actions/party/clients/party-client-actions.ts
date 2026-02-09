@@ -1,24 +1,27 @@
 "use server";
 
+import { generatePublicId } from "@/lib/nanoid";
 import prisma from "@/lib/prisma";
 import { PartyTypeStatus } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
-import { RegisterClientType } from "./client-schemas";
+import { RegisterClientType } from "../../../schemas/client-schemas";
 
-export async function createClientAction(data: RegisterClientType) {
+export async function createPartyClient(data: RegisterClientType) {
     try {
         const { contact, address, ...partyData } = data;
 
         const client = await prisma.party.create({
             data: {
                 ...partyData,
+                publicId: generatePublicId(),
                 cpf: partyData.cpf || null,
                 cnpj: partyData.cnpj || null,
                 fullName: `${data.firstName} ${data.lastName}`,
-                partyType: {
+                partyTypes: {
                     create: {
                         type: "CLIENTE",
                         status: PartyTypeStatus.NOVO,
+                        publicId: generatePublicId(),
                     },
                 },
             },
@@ -27,6 +30,7 @@ export async function createClientAction(data: RegisterClientType) {
         if (contact?.phone) {
             await prisma.partyPhone.create({
                 data: {
+                    publicId: generatePublicId(),
                     phone: contact.phone,
                     isPrimary: true,
                     isWhatsapp: contact.is_whatsapp === "yes",
@@ -49,6 +53,7 @@ export async function createClientAction(data: RegisterClientType) {
                     ...address,
                     name: "Principal",
                     isPrimary: true,
+                    publicId: generatePublicId(),
                     party: {
                         connect: {
                             id: client.id,
@@ -86,21 +91,11 @@ export async function createClientAction(data: RegisterClientType) {
     }
 }
 
-export async function listClientsAction() {
+export async function listPartyClients() {
     try {
-        const count = await prisma.party.count({
+        return await prisma.party.findMany({
             where: {
-                partyType: {
-                    some: {
-                        type: "CLIENTE",
-                    },
-                },
-            },
-        });
-
-        const clients = await prisma.party.findMany({
-            where: {
-                partyType: {
+                partyTypes: {
                     some: {
                         type: "CLIENTE",
                     },
@@ -110,47 +105,39 @@ export async function listClientsAction() {
                 createdAt: "desc",
             },
             include: {
-                _count: true,
-                partyType: {
+                partyTypes: {
                     where: {
                         type: "CLIENTE",
                     },
                 },
-                partyPhone: {
+                partyPhones: {
                     where: {
                         isPrimary: true,
                     },
                 },
-                partyAddress: {
+                partyAddresses: {
                     where: {
                         isPrimary: true,
                     },
                 },
             },
         });
-
-        return { count, clients };
     } catch (error) {
-        console.error("Error in listClientsAction:", error);
         throw error;
     }
 }
 
-export async function getClientAction(id: string) {
+export async function getClientByPartyPublicId(partyPublicId: string) {
     try {
         const client = await prisma.party.findUnique({
             where: {
-                id,
+                publicId: partyPublicId,
             },
             include: {
-                partyAddress: true,
-                partyPhone: true,
-                partyType: {
-                    select: {
-                        status: true,
-                        type: true,
-                    },
-                },
+                partyTypes: true,
+                partyAddresses: true,
+                partyPhones: true,
+                projects: true,
             },
         });
 
@@ -160,12 +147,12 @@ export async function getClientAction(id: string) {
     }
 }
 
-export async function deleteClientAction(id: string) {
+export async function deleteClientAction(publicId: string) {
     try {
         const client = await prisma.party.deleteMany({
             where: {
-                id,
-                partyType: {
+                publicId,
+                partyTypes: {
                     some: {
                         type: "CLIENTE",
                     },

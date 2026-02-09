@@ -12,7 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Eye, Trash2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
-import { deleteClientAction } from "../actions/client-actions";
+import { deleteClientAction } from "../../../../actions/party/clients/party-client-actions";
 
 export const DropdownMenuClientActions = ({
     children,

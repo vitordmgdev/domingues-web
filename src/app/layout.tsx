@@ -52,7 +52,7 @@ export default function RootLayout({
     return (
         <html lang="pt-BR" suppressHydrationWarning>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${domine.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} ${domine.variable} antialiased font-sans`}
             >
                 <Providers>{children}</Providers>
             </body>

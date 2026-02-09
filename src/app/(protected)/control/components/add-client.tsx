@@ -37,11 +37,11 @@ import { Loader2, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMediaQuery } from "usehooks-ts";
-import { createClientAction } from "../actions/client-actions";
+import { createPartyClient } from "../../../../actions/party/clients/party-client-actions";
 import {
-    registerClientSchema,
     RegisterClientType,
-} from "../actions/client-schemas";
+    registerPartyClientSchema,
+} from "../../../../schemas/client-schemas";
 
 export const AddClient = ({
     children,
@@ -96,7 +96,7 @@ export const AddClient = ({
 export const RegisterClientForm = () => {
     const form = useForm<RegisterClientType>({
         mode: "onBlur",
-        resolver: zodResolver(registerClientSchema),
+        resolver: zodResolver(registerPartyClientSchema),
         defaultValues: {
             firstName: "",
             lastName: "",
@@ -142,7 +142,7 @@ export const RegisterClientForm = () => {
         isPending: isPendingCreateClient,
     } = useMutation({
         mutationFn: async (data: RegisterClientType) => {
-            return await createClientAction(data);
+            return await createPartyClient(data);
         },
         onSuccess: async (data) => {
             await queryClient.invalidateQueries({

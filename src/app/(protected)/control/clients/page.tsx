@@ -1,60 +1,50 @@
-"use client";
+'use client';
 
-import { DataTable } from "@/components/data-table";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import { clientStatusLabelMap } from "@/utils/maps";
-import { PartyTypeStatus } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import { ColumnFiltersState } from "@tanstack/react-table";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Calendar as CalendarIcon, PlusIcon, SearchIcon } from "lucide-react";
-import { useState } from "react";
-import { DateRange } from "react-day-picker";
-import { listClientsAction } from "../actions/client-actions";
-import { AddClient } from "../components/add-client";
-import { clientsColumns } from "./clients-columns";
+import { DataTable } from '@/components/data-table';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
+import { clientStatusLabelMap } from '@/utils/maps';
+import { PartyTypeStatus } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
+import { ColumnFiltersState } from '@tanstack/react-table';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { Calendar as CalendarIcon, PlusIcon, SearchIcon } from 'lucide-react';
+import { useState } from 'react';
+import { DateRange } from 'react-day-picker';
+import { listPartyClients } from '../../../../actions/party/clients/party-client-actions';
+import { AddClient } from '../components/add-client';
+import { clientsColumns } from './clients-columns';
 
 const ClientsPage = () => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ["clients"],
+        queryKey: ['clients'],
         queryFn: async () => {
-            return await listClientsAction();
-        },
+            return await listPartyClients();
+        }
     });
 
-    const [filterValue, setFilterValue] = useState("");
-    const [statusFilter, setStatusFilter] = useState("all");
+    const [filterValue, setFilterValue] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
     const [dateFilter, setDateFilter] = useState<DateRange | undefined>();
 
     const columnFilters: ColumnFiltersState = [];
 
-    if (statusFilter && statusFilter !== "all") {
+    if (statusFilter && statusFilter !== 'all') {
         columnFilters.push({
-            id: "status",
-            value: statusFilter,
+            id: 'status',
+            value: statusFilter
         });
     }
 
     if (dateFilter?.from) {
         columnFilters.push({
-            id: "createdAt",
-            value: dateFilter,
+            id: 'createdAt',
+            value: dateFilter
         });
     }
 
@@ -69,7 +59,7 @@ const ClientsPage = () => {
                                 placeholder="Pesquisar cliente..."
                                 className="w-64 ps-8 border-none bg-transparent dark:bg-transparent"
                                 value={filterValue}
-                                onChange={(e) => setFilterValue(e.target.value)}
+                                onChange={e => setFilterValue(e.target.value)}
                             />
 
                             <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -77,23 +67,16 @@ const ClientsPage = () => {
                     </div>
 
                     <div className="flex gap-4">
-                        <Select
-                            value={statusFilter}
-                            onValueChange={setStatusFilter}
-                        >
+                        <Select value={statusFilter} onValueChange={setStatusFilter}>
                             <SelectTrigger className="w-32 border-none bg-transparent dark:bg-transparent p-2">
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">Todos</SelectItem>
 
-                                {Object.keys(PartyTypeStatus).map((status) => (
+                                {Object.keys(PartyTypeStatus).map(status => (
                                     <SelectItem key={status} value={status}>
-                                        {
-                                            clientStatusLabelMap[
-                                                status as PartyTypeStatus
-                                            ]
-                                        }
+                                        {clientStatusLabelMap[status as PartyTypeStatus]}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -102,59 +85,43 @@ const ClientsPage = () => {
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
-                                    variant={"outline"}
+                                    variant={'outline'}
                                     className={cn(
-                                        "w-[220px] justify-start text-left font-normal border-none bg-transparent dark:bg-transparent",
-                                        !dateFilter && "text-muted-foreground",
+                                        'w-[220px] justify-start text-left font-normal border-none bg-transparent dark:bg-transparent',
+                                        !dateFilter && 'text-muted-foreground'
                                     )}
                                 >
                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                     {dateFilter?.from ? (
                                         dateFilter.to ? (
                                             <>
-                                                {format(
-                                                    dateFilter.from,
-                                                    "dd/MM/yyyy",
-                                                )}{" "}
-                                                -{" "}
-                                                {format(
-                                                    dateFilter.to,
-                                                    "dd/MM/yyyy",
-                                                )}
+                                                {format(dateFilter.from, 'dd/MM/yyyy')} -{' '}
+                                                {format(dateFilter.to, 'dd/MM/yyyy')}
                                             </>
                                         ) : (
-                                            format(
-                                                dateFilter.from,
-                                                "dd/MM/yyyy",
-                                            )
+                                            format(dateFilter.from, 'dd/MM/yyyy')
                                         )
                                     ) : (
                                         <span>Filtrar por data</span>
                                     )}
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                            >
+                            <PopoverContent className="w-auto p-0" align="center">
                                 <Calendar
                                     mode="range"
                                     defaultMonth={dateFilter?.from}
                                     selected={dateFilter}
                                     onSelect={setDateFilter}
-                                    numberOfMonths={2}
+                                    numberOfMonths={1}
+                                    ISOWeek
                                     locale={ptBR}
                                 />
                             </PopoverContent>
                         </Popover>
 
                         <AddClient>
-                            <Button
-                                variant="outline"
-                                disabled={isLoading}
-                                className="rounded-sm"
-                            >
-                                <PlusIcon />
+                            <Button size="sm" variant="outline" disabled={isLoading} className="rounded-sm">
+                                <PlusIcon className="size-4" />
                                 Adicionar cliente
                             </Button>
                         </AddClient>
@@ -163,14 +130,12 @@ const ClientsPage = () => {
 
                 {error ? (
                     <div className="flex items-center justify-center">
-                        <p className="text-destructive">
-                            Erro ao carregar clientes
-                        </p>
+                        <p className="text-destructive">{error.message}</p>
                     </div>
                 ) : (
                     <DataTable
                         columns={clientsColumns}
-                        data={data?.clients || []}
+                        data={data || []}
                         isLoading={isLoading}
                         filterValue={filterValue}
                         setFilterValue={setFilterValue}

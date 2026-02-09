@@ -1,23 +1,23 @@
-"use server";
+'use server';
 
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { ControlSidebar } from "./components/layout/control-sidebar";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from '@/components/ui/sonner';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { ControlSidebar } from './components/layout/control-sidebar';
 
 const ControlLayout = async ({ children }: { children: React.ReactNode }) => {
     const session = await auth.api.getSession({
-        headers: await headers(),
+        headers: await headers()
     });
 
     if (!session) {
-        return redirect("/");
+        return redirect('/');
     }
 
     return (
         <ControlSidebar>
-            <Toaster />
+            <Toaster position="top-center" />
             {children}
         </ControlSidebar>
     );

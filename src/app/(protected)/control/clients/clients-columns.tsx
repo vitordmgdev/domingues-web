@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { clientStatusLabelMap, clientStatusStylesMap } from "@/utils/maps";
-import { PartyTypeStatus, Prisma } from "@prisma/client";
+import { PartyTypeStatus } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import {
     endOfDay,
@@ -14,27 +14,9 @@ import { ptBR } from "date-fns/locale";
 import { ArrowUpDown, MoreVertical } from "lucide-react";
 import { DropdownMenuClientActions } from "../components/dropdown-menu-client-actions";
 
-type ClientsColumnsProps = Prisma.PartyGetPayload<{
-    include: {
-        _count: true;
-        partyType: {
-            select: {
-                status: true;
-                type: true;
-            };
-        };
-        partyPhone: {
-            where: {
-                isPrimary: true;
-            };
-        };
-        partyAddress: {
-            where: {
-                isPrimary: true;
-            };
-        };
-    };
-}>;
+import { listPartyClients } from "../../../../actions/party/clients/party-client-actions";
+
+type ClientsColumnsProps = Awaited<ReturnType<typeof listPartyClients>>[number];
 
 export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     {
@@ -59,7 +41,7 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
     },
     {
         accessorFn: (row) =>
-            row.partyType.find((partyType) => partyType.type === "CLIENTE")
+            row.partyTypes.find((partyType) => partyType.type === "CLIENTE")
                 ?.status,
         id: "status",
         header: "Status",
@@ -119,7 +101,7 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         cell: ({ row }) => {
             return (
                 <span>
-                    {row.original.partyPhone.find((phone) => phone.isPrimary)
+                    {row.original.partyPhones.find((phone) => phone.isPrimary)
                         ?.phone ?? ""}
                 </span>
             );
@@ -160,7 +142,7 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         header: ({ column }) => {
             return (
                 <div className="flex justify-between items-center">
-                    Data de cadastro
+                    Última atualização
                     <Button
                         variant="ghost"
                         size="icon-sm"
@@ -210,7 +192,7 @@ export const clientsColumns: ColumnDef<ClientsColumnsProps>[] = [
         id: "actions",
         cell: ({ row }) => {
             return (
-                <DropdownMenuClientActions id={row.original.id}>
+                <DropdownMenuClientActions id={row.original.publicId}>
                     <Button variant="ghost" size="icon-sm" autoFocus={false}>
                         <span className="sr-only">Open menu</span>
                         <MoreVertical className="size-4" />

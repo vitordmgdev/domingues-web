@@ -63,7 +63,7 @@ model Account {
 }
 
 model Verification {
-  id         String   @id @default(ulid())
+  id         String   @id @default(uuid())
   identifier String
   value      String
   expiresAt  DateTime
@@ -74,7 +74,10 @@ model Verification {
 }
 
 model Party {
-  id                String         @id @default(ulid())
+  id        BigInt @id @default(autoincrement())
+  publicId  String @unique
+  privateId String @unique @default(uuid())
+
   firstName         String
   lastName          String?
   fullName          String
@@ -90,22 +93,24 @@ model Party {
   fantasyName       String?
   stateRegistration String?
   user              User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  partyAddress      PartyAddress[]
-  partyPhone        PartyPhone[]
-  partyType         PartyType[]
+  partyAddresses    Address[]
+  phones            PartyPhone[]
+  partyTypes        PartyType[]
   projects          Project[]
 
-  @@map("party")
+  @@index([publicId])
 }
 
 model PartyType {
-  id        String        @id @default(cuid())
-  partyId   String
+  id        BigInt          @id @default(autoincrement())
+  publicId  String          @unique
+  privateId String          @unique @default(uuid())
+  partyId   BigInt
   type      PartyEntities
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  party     Party         @relation(fields: [partyId], references: [id], onDelete: Cascade)
-  status    PartyTypeStatus   @default(NOVO)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  party     Party           @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  status    PartyTypeStatus @default(NOVO)
 
   @@unique([partyId, type])
   @@index([partyId])
@@ -113,8 +118,10 @@ model PartyType {
 }
 
 model PartyPhone {
-  id         String   @id @default(ulid())
-  partyId    String
+  id         BigInt   @id @default(autoincrement())
+  publicId   String   @unique
+  privateId  String   @unique @default(uuid())
+  partyId    BigInt
   phone      String
   isPrimary  Boolean  @default(false)
   isWhatsapp Boolean  @default(false)
@@ -127,9 +134,11 @@ model PartyPhone {
   @@map("party_phone")
 }
 
-model PartyAddress {
-  id         String   @id @default(ulid())
-  partyId    String
+model Address {
+  id         BigInt   @id @default(autoincrement())
+  publicId   String   @unique
+  privateId  String   @unique @default(uuid())
+  partyId    BigInt
   name       String?
   identifier String?
   complement String?
@@ -141,24 +150,87 @@ model PartyAddress {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   party      Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  addressOnProject AddressOnProject[]
 
   @@index([partyId])
-  @@map("party_address")
+  @@map("address")
 }
 
-model Project {
-  id String @id @default(ulid())
-  partyId String
-  title String
-  startedAt DateTime
-  finishedAt DateTime?
-  deadlineDate DateTime?
-  priority PriorityStatus
+model AddressOnProject {
+  id BigInt @id @default(autoincrement())
+  publicId String @unique
+  privateId String @unique @default(uuid())
+  addressId BigInt @unique
 
-  party Party @relation(fields: [partyId], references: [id], onDelete: NoAction)
+  address Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  projects Project[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id           Int            @id @default(autoincrement())
+  publicId     String         @unique
+  privateId    String         @unique @default(uuid())
+  partyId      BigInt
+  addressId    BigInt
+  title        String
+  description  String?
+  startedAt    DateTime?
+  finishedAt   DateTime?
+  deadlineDate DateTime
+  priority     PriorityStatus
+
+  party Party @relation(fields: [partyId], references: [id], onDelete: NoAction)
+  address AddressOnProject @relation(fields: [addressId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([publicId])
+  @@map("project")
+}
+
+model ClientPipelineStage {
+  id          Int     @id @default(autoincrement())
+  publicId    String  @unique
+  privateId   String  @unique @default(uuid())
+  title       String?
+  description String?
+  position    Float
+
+  pipelineType PipelineType
+
+  items ClientPipelineStageItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("client_pipeline_stage")
+}
+
+model ClientPipelineStageItem {
+  id              Int    @id @default(autoincrement())
+  publicId        String @unique
+  privateId       String @unique @default(uuid())
+  pipelineStageId Int
+  title           String
+  position        Float
+  entityId        String
+
+  pipelineStage ClientPipelineStage @relation(fields: [pipelineStageId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("client_pipeline_stage_item")
+}
+
+enum PipelineType {
+  LEAD
+  CLIENTE
+  PROJETO
 }
 
 enum PriorityStatus {
